@@ -6,6 +6,7 @@ import Contact from './pages/Contact/Contact'
 import Header from './pages/Header/Header'
 import Footer from './pages/Footer/Footer'
 import Home from './pages/Home/Home'
+import Register from './pages/Register/Register'
 
 const Layout = () => {
   return (
@@ -34,9 +35,16 @@ export default function App() {
       ],
     },
 
+    // route login
     {
       path: 'login',
       element: <Login />,
+    },
+
+    // route register
+    {
+      path: 'register',
+      element: <Register />,
     },
   ])
 
