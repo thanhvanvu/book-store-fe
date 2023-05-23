@@ -1,9 +1,20 @@
 import React, { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Login from './pages/login/Login'
+import { Outlet } from 'react-router-dom'
+import Login from './pages/Login/Login'
+import Contact from './pages/Contact/Contact'
+import Header from './pages/Header/Header'
+import Footer from './pages/Footer/Footer'
+import Home from './pages/Home/Home'
 
 const Layout = () => {
-  return <>Main page</>
+  return (
+    <div className="layout-app">
+      <Header />
+      <Outlet />
+      <Footer />
+    </div>
+  )
 }
 
 export default function App() {
@@ -12,6 +23,15 @@ export default function App() {
       path: '/',
       element: <Layout />,
       errorElement: <div>404 Not Found</div>,
+
+      // Nested Route
+      children: [
+        { index: true, element: <Home /> },
+        {
+          path: 'contact',
+          element: <Contact />,
+        },
+      ],
     },
 
     {
