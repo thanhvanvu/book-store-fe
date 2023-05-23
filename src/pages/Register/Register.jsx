@@ -16,7 +16,7 @@ const Register = () => {
   return (
     <>
       <div className="register-wrapper">
-        <Col className="register-page" span={10}>
+        <div className="register-page">
           <h3 className="register-title">Register</h3>
           <Form
             name="register"
@@ -117,7 +117,7 @@ const Register = () => {
               </Button>
             </Form.Item>
           </Form>
-        </Col>
+        </div>
       </div>
     </>
   )

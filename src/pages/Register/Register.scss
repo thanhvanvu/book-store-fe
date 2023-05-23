@@ -1,15 +1,25 @@
-.register-page {
-  border: 1px solid #ccc;
-  margin: 0 auto;
-  margin-top: 50px;
-  border-radius: 10px;
+.register-wrapper {
+  height: 100vh;
+  background-color: rgb(213, 225, 227);
+  padding-top: 50px;
 
-  .register-title {
-    text-align: center;
-    font-size: 30px;
-  }
-
-  Form {
+  .register-page {
+    padding-top: 20px;
+    width: 500px;
+    background-color: white;
+    border: 1px solid #ccc;
     margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+    .register-title {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    Form {
+      margin: 0 auto;
+    }
   }
 }
