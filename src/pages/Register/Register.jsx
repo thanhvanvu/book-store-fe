@@ -1,23 +1,37 @@
-import React from 'react'
-import { Button, Form, Input, Select } from 'antd'
-import { Col, Row } from 'antd'
+import React, { useState } from 'react'
+import { Button, Divider, Form, Input, notification } from 'antd'
 import './Register.scss'
-import { Option } from 'antd/es/mentions'
+import { handleRegister } from '../../services/userService'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
-  const onFinish = (values) => {
-    console.log('Success:', values)
-  }
+  const [isSubmit, setIsSubmit] = useState(false)
+  const navigate = useNavigate()
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo)
+  const onFinish = async (values) => {
+    setIsSubmit(true)
+
+    let response = await handleRegister(values)
+    setIsSubmit(false)
+    if (response && response.data) {
+      notification.success({
+        message: 'Register sucessfully!',
+        duration: 2,
+      })
+      navigate('/login')
+    } else {
+      notification.error({
+        message: 'Error!',
+        description: 'Email already exists, please use another email!',
+        duration: 4,
+      })
+    }
   }
 
   return (
     <>
       <div className="register-wrapper">
         <div className="register-page">
-          <h3 className="register-title">Register</h3>
           <Form
             name="register"
             labelCol={{ span: 7 }}
@@ -25,9 +39,10 @@ const Register = () => {
             style={{ maxWidth: 400 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
+            <h3 className="register-title">Register</h3>
+            <Divider></Divider>
             <Form.Item
               labelCol={{ span: 24 }}
               label="Full Name"
@@ -111,8 +126,8 @@ const Register = () => {
               <Input style={{ width: '100%' }} />
             </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 10, span: 0 }}>
-              <Button type="primary" htmlType="submit">
+            <Form.Item wrapperCol={{ offset: 0, span: 0 }}>
+              <Button type="primary" htmlType="submit" loading={isSubmit}>
                 Register
               </Button>
             </Form.Item>

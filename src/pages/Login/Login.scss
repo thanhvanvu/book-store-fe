@@ -1,10 +1,10 @@
-.register-wrapper {
+.login-wrapper {
   height: 100vh;
   background-color: rgb(213, 225, 227);
   padding-top: 50px;
 
-  .register-page {
-    padding-top: 20px;
+  .login-page {
+    padding: 30px;
     width: 500px;
     background-color: white;
     border: 1px solid #ccc;
@@ -12,7 +12,7 @@
     border-radius: 10px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
-    .register-title {
+    .login-title {
       font-size: 40px;
       font-weight: bold;
     }
