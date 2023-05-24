@@ -8,6 +8,10 @@ const instance = axios.create({
   withCredentials: true,
 })
 
+// every request from client, client will send the access token to server
+const access_token = localStorage.getItem('access_token')
+instance.defaults.headers.common = { Authorization: `Bearer ${access_token}` }
+
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {

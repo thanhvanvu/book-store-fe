@@ -3,9 +3,12 @@ import { Button, Divider, Form, Input, notification } from 'antd'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import './Login.scss'
 import { handleLogin } from '../../services/userService'
+import { useDispatch } from 'react-redux'
+import { doLoginAction } from '../../redux/account/accountSlice'
 
 const Login = () => {
   const [isSubmit, setIsSubmit] = useState(false)
+  const dispatch = useDispatch()
 
   const navigate = useNavigate()
 
@@ -16,10 +19,14 @@ const Login = () => {
 
     if (response?.data) {
       let accessToken = response.data.access_token
-
       // save access token in localstorage
       localStorage.setItem('access_token', accessToken)
+
+      let user = response.data.user
+      dispatch(doLoginAction(user))
+
       setIsSubmit(false)
+
       notification.success({
         message: 'Login sucessfully!',
         duration: 2,
