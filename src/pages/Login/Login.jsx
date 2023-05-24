@@ -15,6 +15,10 @@ const Login = () => {
     let response = await handleLogin(values)
 
     if (response?.data) {
+      let accessToken = response.data.access_token
+
+      // save access token in localstorage
+      localStorage.setItem('access_token', accessToken)
       setIsSubmit(false)
       notification.success({
         message: 'Login sucessfully!',
