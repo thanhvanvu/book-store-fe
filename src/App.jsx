@@ -10,7 +10,7 @@ import Register from './pages/Register/Register'
 import './styles/App.scss'
 import { handleFetchAccount } from './services/userService'
 import { useDispatch, useSelector } from 'react-redux'
-import { doGetAccountAction } from './redux/account/accountSlice'
+import { doLoginAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import Admin from './pages/admin/admin'
@@ -31,7 +31,7 @@ export default function App() {
     let response = await handleFetchAccount()
     if (response?.data?.user) {
       let user = response.data.user
-      dispatch(doGetAccountAction(user))
+      dispatch(doLoginAction(user))
     }
   }
 
@@ -41,16 +41,6 @@ export default function App() {
   //#endregion
 
   const Layout = () => {
-    return (
-      <div className="layout-app">
-        <Header />
-        <Outlet />
-        <Footer />
-      </div>
-    )
-  }
-
-  const LayoutAdmin = () => {
     return (
       <div className="layout-app">
         <Header />
@@ -80,7 +70,7 @@ export default function App() {
     // layout for admin page
     {
       path: '/admin',
-      element: <LayoutAdmin />,
+      element: <Layout />,
       errorElement: <NotFound />,
 
       // Nested Route
