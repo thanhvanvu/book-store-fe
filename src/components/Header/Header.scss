@@ -1,0 +1,54 @@
+.home-header {
+  .home-header-container {
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+
+    .book-store-logo {
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .search-bar {
+      margin-left: 20px;
+      .ant-btn-primary {
+        background-color: #f2c50f;
+      }
+    }
+
+    .cart-icon {
+      cursor: pointer;
+      margin-left: 20px;
+      font-size: 30px;
+      color: #cdaa1f;
+    }
+
+    .account {
+      margin-left: 20px;
+      color: rgb(128, 128, 137);
+      .ant-dropdown-menu-title-content {
+        a {
+          color: rgb(128, 128, 137);
+        }
+      }
+    }
+
+    .support {
+      cursor: pointer;
+      margin-left: 20px;
+      float: right;
+      display: flex;
+      align-items: center;
+
+      .support-icon {
+        font-size: 30px;
+        color: #cdaa1f;
+      }
+      p {
+        margin-left: 5px;
+        color: rgb(128, 128, 137);
+      }
+    }
+  }
+}
