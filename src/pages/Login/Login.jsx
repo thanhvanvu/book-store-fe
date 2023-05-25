@@ -6,6 +6,8 @@ import { handleLogin } from '../../services/userService'
 import { useDispatch } from 'react-redux'
 import { doLoginAction } from '../../redux/account/accountSlice'
 
+import HashLoading from '../../components/Loading/HashLoading'
+
 const Login = () => {
   const [isSubmit, setIsSubmit] = useState(false)
   const dispatch = useDispatch()
