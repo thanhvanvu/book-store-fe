@@ -10,7 +10,7 @@ import Register from './pages/Register/Register'
 import './styles/App.scss'
 import { handleFetchAccount } from './services/userService'
 import { useDispatch, useSelector } from 'react-redux'
-import { doLoginAction } from './redux/account/accountSlice'
+import { doGetAccountAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import Admin from './pages/admin/admin'
@@ -25,16 +25,13 @@ export default function App() {
   //#region  when DOM render, automatically send API to get user information
   const getAccount = async () => {
     // if user is on page login/admin, no need to fetch account
-    if (
-      window.location.pathname === '/login' ||
-      window.location.pathname === '/admin'
-    ) {
+    if (window.location.pathname === '/login') {
       return
     }
     let response = await handleFetchAccount()
     if (response?.data?.user) {
       let user = response.data.user
-      dispatch(doLoginAction(user))
+      dispatch(doGetAccountAction(user))
     }
   }
 
@@ -44,6 +41,16 @@ export default function App() {
   //#endregion
 
   const Layout = () => {
+    return (
+      <div className="layout-app">
+        <Header />
+        <Outlet />
+        <Footer />
+      </div>
+    )
+  }
+
+  const LayoutAdmin = () => {
     return (
       <div className="layout-app">
         <Header />
@@ -73,7 +80,7 @@ export default function App() {
     // layout for admin page
     {
       path: '/admin',
-      element: <Layout />,
+      element: <LayoutAdmin />,
       errorElement: <NotFound />,
 
       // Nested Route
@@ -113,7 +120,8 @@ export default function App() {
       {/* If use not log in, allow user go to page /login */}
       {isAuthenticated === true ||
       window.location.pathname === '/login' ||
-      window.location.pathname === '/admin' ? (
+      window.location.pathname === '/register' ||
+      window.location.pathname === '/' ? (
         <RouterProvider router={router} />
       ) : (
         <HashLoading />
