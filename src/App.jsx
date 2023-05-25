@@ -13,8 +13,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { doLoginAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
-import Admin from './pages/admin/admin'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import AdminPage from './pages/AdminPage/AdminPage'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -60,7 +60,6 @@ export default function App() {
     return (
       <div className="layout-app">
         {/* check condition to not render header and footer for NotPermited page */}
-        {isAdminRoute && userRole === 'ADMIN' && <Header />}
 
         <Outlet />
 
@@ -99,7 +98,7 @@ export default function App() {
           element: (
             // if user is login, user can go to admin page. If not, redirect to login
             <ProtectedRoute>
-              <Admin />
+              <AdminPage />
             </ProtectedRoute>
           ),
         },
