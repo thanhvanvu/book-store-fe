@@ -50,6 +50,25 @@ export default function App() {
     )
   }
 
+  const LayoutAdmin = () => {
+    // check if current page is admin?
+    const isAdminRoute = window.location.pathname.startsWith('/admin')
+
+    const user = useSelector((state) => state.account.user)
+    const userRole = user.role
+
+    return (
+      <div className="layout-app">
+        {/* check condition to not render header and footer for NotPermited page */}
+        {isAdminRoute && userRole === 'ADMIN' && <Header />}
+
+        <Outlet />
+
+        {isAdminRoute && userRole === 'ADMIN' && <Footer />}
+      </div>
+    )
+  }
+
   const router = createBrowserRouter([
     // layout for homepage
     {
@@ -70,7 +89,7 @@ export default function App() {
     // layout for admin page
     {
       path: '/admin',
-      element: <Layout />,
+      element: <LayoutAdmin />,
       errorElement: <NotFound />,
 
       // Nested Route
