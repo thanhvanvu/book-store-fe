@@ -22,15 +22,43 @@
       margin-left: 20px;
       font-size: 30px;
       color: #cdaa1f;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .account {
-      margin-left: 20px;
+      margin-left: 30px;
       color: rgb(128, 128, 137);
       .ant-dropdown-menu-title-content {
         a {
           color: rgb(128, 128, 137);
         }
+      }
+    }
+
+    .account-login {
+      margin-left: 30px;
+      color: rgb(128, 128, 137);
+      text-decoration: none;
+      cursor: pointer;
+
+      a {
+        all: unset;
+        align-items: center;
+        display: flex;
+
+        .face-icon {
+          font-size: 30px;
+          color: #cdaa1f;
+          margin-right: 5px;
+          font-weight: bold;
+        }
+      }
+
+      &:hover {
+        text-decoration: underline;
       }
     }
 
@@ -48,6 +76,10 @@
       p {
         margin-left: 5px;
         color: rgb(128, 128, 137);
+      }
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

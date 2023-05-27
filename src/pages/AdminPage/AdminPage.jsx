@@ -3,22 +3,39 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   BookOutlined,
-  UserOutlined,
   VideoCameraOutlined,
   DollarOutlined,
 } from '@ant-design/icons'
-import { Layout, Menu, Button, theme } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
+
+import { Layout, Menu, Button, theme, Dropdown, Space, Avatar } from 'antd'
 import { RxDashboard } from 'react-icons/rx'
 import AdminContent from './AdminContent'
 import './AdminPage.scss'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { CiFaceSmile } from 'react-icons/ci'
 
 const { Header, Sider, Content } = Layout
+
+const items = [
+  {
+    label: (
+      <a href="https://www.aliyun.com" style={{ color: 'rgb(128, 128, 137)' }}>
+        Log out
+      </a>
+    ),
+    key: '1',
+  },
+]
 
 function AdminPage() {
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+
+  const { user, isAuthenticated } = useSelector((state) => state.account)
 
   return (
     <Layout className="admin-page-layout">
@@ -60,7 +77,14 @@ function AdminPage() {
       </Sider>
 
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgContainer,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -71,6 +95,29 @@ function AdminPage() {
               height: 64,
             }}
           />
+
+          {isAuthenticated === true ? (
+            <Dropdown
+              menu={{ items }}
+              trigger={['click']}
+              className="account"
+              style={{ marginRight: '10px' }}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Avatar size="medium" icon={<UserOutlined />} />{' '}
+                  {user.fullName}
+                </Space>
+              </a>
+            </Dropdown>
+          ) : (
+            <div className="account-login">
+              <Link to="/login">
+                <CiFaceSmile className="face-icon" />
+                <p>Account</p>
+              </Link>
+            </div>
+          )}
         </Header>
 
         <Content

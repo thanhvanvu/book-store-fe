@@ -1,13 +1,19 @@
-import { Badge, Button, Col, Row } from 'antd'
+import { Avatar, Badge, Button, Col, Row } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 import React from 'react'
+
 import './Header.scss'
 import Logo from '../../assets/logo/logo-book-store.png'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
+import { CiFaceSmile } from 'react-icons/ci'
 import { BiSupport } from 'react-icons/bi'
 import { Input, Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const { Search } = Input
+
 const items = [
   {
     label: (
@@ -31,6 +37,7 @@ const items = [
 ]
 
 const Header = () => {
+  const { user, isAuthenticated } = useSelector((state) => state.account)
   return (
     <Row className="home-header">
       <Col className="home-header-container" span={20}>
@@ -44,14 +51,23 @@ const Header = () => {
           <AiOutlineShoppingCart className="cart-icon" />
         </Badge>
 
-        <Dropdown menu={{ items }} trigger={['click']} className="account">
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              Welcome Admin
-              <DownOutlined />
-            </Space>
-          </a>
-        </Dropdown>
+        {isAuthenticated === true ? (
+          <Dropdown menu={{ items }} trigger={['click']} className="account">
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                <Avatar size="medium" icon={<UserOutlined />} /> {user.fullName}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          <div className="account-login">
+            <Link to="/login">
+              <CiFaceSmile className="face-icon" />
+              <p>Account</p>
+            </Link>
+          </div>
+        )}
 
         {/* <Button>Login account</Button> */}
         <div className="support">
