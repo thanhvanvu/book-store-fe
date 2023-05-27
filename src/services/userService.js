@@ -32,4 +32,17 @@ const handleFetchAccount = () => {
 
   return axios(options)
 }
-export { handleRegister, handleLogin, handleFetchAccount }
+
+const handleLogout = () => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: '/api/v1/auth/logout',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+export { handleRegister, handleLogin, handleFetchAccount, handleLogout }

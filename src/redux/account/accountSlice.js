@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   isAuthenticated: false, //authendicated: check if user is logged in or not ?
+
+  isLoading: true,
   user: {
     email: '',
     phone: '',
@@ -24,6 +26,26 @@ export const accountSlice = createSlice({
       // immutable state based off those changes
       state.isAuthenticated = true
       state.user = action.payload
+      state.isLoading = false
+    },
+
+    doLogoutAction: (state, action) => {
+      localStorage.removeItem('access_token')
+      state.isAuthenticated = false
+      state.user = {
+        email: '',
+        phone: '',
+        fullName: '',
+        role: '',
+        avatar: '',
+        id: '',
+      }
+    },
+
+    doFetchAccount: (state, action) => {
+      state.isAuthenticated = true
+      state.user = action.payload
+      state.isLoading = false
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -31,7 +53,8 @@ export const accountSlice = createSlice({
   extraReducers: (builder) => {},
 })
 
-export const { doLoginAction } = accountSlice.actions
+export const { doLoginAction, doLogoutAction, doFetchAccount } =
+  accountSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

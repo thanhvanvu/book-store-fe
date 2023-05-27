@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Col, Row } from 'antd'
+import { Avatar, Badge, Button, Col, Row, notification } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import React from 'react'
 
@@ -9,35 +9,54 @@ import { CiFaceSmile } from 'react-icons/ci'
 import { BiSupport } from 'react-icons/bi'
 import { Input, Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { handleLogout } from '../../services/userService'
+import { doLogoutAction } from '../../redux/account/accountSlice'
 
 const { Search } = Input
 
-const items = [
-  {
-    label: (
-      <a
-        href="https://www.antgroup.com"
-        style={{ color: 'rgb(128, 128, 137)' }}
-      >
-        Account management
-      </a>
-    ),
-    key: '0',
-  },
-  {
-    label: (
-      <a href="https://www.aliyun.com" style={{ color: 'rgb(128, 128, 137)' }}>
-        Log out
-      </a>
-    ),
-    key: '1',
-  },
-]
-
 const Header = () => {
   const { user, isAuthenticated } = useSelector((state) => state.account)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const logout = async () => {
+    if (window.confirm('Are you sure to logout? ')) {
+      let response = await handleLogout()
+      if (response?.data) {
+        dispatch(doLogoutAction())
+        notification.success({
+          message: 'Logout sucessfully!',
+          duration: 2,
+        })
+        navigate('/')
+      }
+    }
+  }
+
+  const items = [
+    {
+      label: (
+        <a
+          href="https://www.antgroup.com"
+          style={{ color: 'rgb(128, 128, 137)' }}
+        >
+          Account management
+        </a>
+      ),
+      key: '0',
+    },
+    {
+      label: (
+        <div style={{ color: 'rgb(128, 128, 137)' }} onClick={logout}>
+          Log out
+        </div>
+      ),
+      key: '1',
+    },
+  ]
+
   return (
     <Row className="home-header">
       <Col className="home-header-container" span={20}>

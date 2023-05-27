@@ -10,7 +10,7 @@ import Register from './pages/Register/Register'
 import './styles/App.scss'
 import { handleFetchAccount } from './services/userService'
 import { useDispatch, useSelector } from 'react-redux'
-import { doLoginAction } from './redux/account/accountSlice'
+import { doFetchAccount, doLoginAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
@@ -20,7 +20,7 @@ export default function App() {
   const dispatch = useDispatch()
 
   // state redux, account reduder, isAuthenticated: value in reducer
-  const isAuthenticated = useSelector((state) => state.account.isAuthenticated)
+  const { isAuthenticated, isLoading } = useSelector((state) => state.account)
 
   //#region  when DOM render, automatically send API to get user information
   const getAccount = async () => {
@@ -31,7 +31,7 @@ export default function App() {
     let response = await handleFetchAccount()
     if (response?.data?.user) {
       let user = response.data.user
-      dispatch(doLoginAction(user))
+      dispatch(doFetchAccount(user))
     }
   }
 
