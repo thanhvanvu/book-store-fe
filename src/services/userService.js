@@ -58,10 +58,24 @@ const handleGetAllUsers = () => {
 
   return axios(options)
 }
+
+const handleGetUserWithPaginate = (pagination) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/user?current=${pagination.current}&pageSize=${pagination.pageSize}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
   handleFetchAccount,
   handleLogout,
   handleGetAllUsers,
+  handleGetUserWithPaginate,
 }

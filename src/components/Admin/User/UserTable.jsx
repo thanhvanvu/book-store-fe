@@ -3,7 +3,10 @@ import { Table } from 'antd'
 import { Button, Checkbox, Form, Input, Space, Pagination } from 'antd'
 
 import './UserTable.scss'
-import { handleGetAllUsers } from '../../../services/userService'
+import {
+  handleGetAllUsers,
+  handleGetUserWithPaginate,
+} from '../../../services/userService'
 
 const columns = [
   {
@@ -62,15 +65,21 @@ const UserTable = () => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
+    total: 0,
   })
   const [data, setData] = useState([])
 
-  const getAllUser = async () => {
-    const response = await handleGetAllUsers()
-    let buildUserData = []
-    if (response?.data) {
-      let userData = response.data
+  const getUserWithPaginate = async () => {
+    const response = await handleGetUserWithPaginate(pagination)
 
+    let buildUserData = []
+    if (response?.data?.result) {
+      let userData = response.data.result
+      let meta = response.data.meta
+      setPagination({
+        ...pagination,
+        total: meta.total,
+      })
       userData.map((user, index) => {
         let object = {}
         object.key = `${index}`
@@ -87,12 +96,17 @@ const UserTable = () => {
     setData(buildUserData)
   }
 
+  // useEffect(() => {
+  //   getAllUser()
+  // }, [])
+
   useEffect(() => {
-    getAllUser()
-  }, [])
+    getUserWithPaginate()
+  }, [pagination.current, pagination.pageSize])
 
   const onChange = (pagination, filters, sorter, extra) => {
     setPagination({
+      ...pagination,
       current: pagination.current,
       pageSize: pagination.pageSize,
     })
@@ -138,6 +152,7 @@ const UserTable = () => {
         pagination={{
           current: pagination.current,
           pageSize: pagination.pageSize,
+          total: pagination.total,
           showSizeChanger: true,
         }}
         pageSizeOptions={5}
