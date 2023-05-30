@@ -1,74 +1,101 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd'
 import { Button, Checkbox, Form, Input, Space, Pagination } from 'antd'
 
 import './UserTable.scss'
+import { handleGetAllUsers } from '../../../services/userService'
+
+const columns = [
+  {
+    title: 'Id',
+    dataIndex: 'id',
+    sorter: true,
+    align: 'center',
+  },
+  {
+    title: 'Full Name',
+    dataIndex: 'fullname',
+    align: 'center',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+    align: 'center',
+  },
+  {
+    title: 'Phone number',
+    dataIndex: 'phoneNumber',
+    align: 'center',
+  },
+  {
+    title: 'Role',
+    dataIndex: 'role',
+    align: 'center',
+  },
+
+  {
+    title: 'Action',
+
+    render: (record) => {
+      return (
+        <>
+          <Space
+            wrap
+            className="search-clear-button"
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <Button type="primary" onClick={() => console.log(record)}>
+              Update
+            </Button>
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Space>
+        </>
+      )
+    },
+    align: 'center',
+  },
+]
 
 const UserTable = () => {
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      sorter: true,
-    },
-    {
-      title: 'Chinese Score',
-      dataIndex: 'chinese',
-      sorter: {
-        compare: (a, b) => a.chinese - b.chinese,
-        multiple: 3,
-      },
-    },
-    {
-      title: 'Math Score',
-      dataIndex: 'math',
-      sorter: {
-        compare: (a, b) => a.math - b.math,
-        multiple: 2,
-      },
-    },
-    {
-      title: 'English Score',
-      dataIndex: 'english',
-      sorter: {
-        compare: (a, b) => a.english - b.english,
-        multiple: 1,
-      },
-    },
-  ]
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  })
+  const [data, setData] = useState([])
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      chinese: 98,
-      math: 60,
-      english: 70,
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      chinese: 98,
-      math: 66,
-      english: 89,
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      chinese: 98,
-      math: 90,
-      english: 70,
-    },
-    {
-      key: '4',
-      name: 'Jim Red',
-      chinese: 88,
-      math: 99,
-      english: 89,
-    },
-  ]
+  const getAllUser = async () => {
+    const response = await handleGetAllUsers()
+    let buildUserData = []
+    if (response?.data) {
+      let userData = response.data
+
+      userData.map((user, index) => {
+        let object = {}
+        object.key = `${index}`
+        object.id = user._id
+        object.fullname = user.fullName
+        object.email = user.email
+        object.phoneNumber = user.phone
+        object.role = user.role
+
+        buildUserData.push(object)
+      })
+    }
+
+    setData(buildUserData)
+  }
+
+  useEffect(() => {
+    getAllUser()
+  }, [])
+
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', sorter)
+    setPagination({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    })
   }
 
   const onFinish = (values) => {
@@ -108,9 +135,13 @@ const UserTable = () => {
         columns={columns}
         dataSource={data}
         onChange={onChange}
-        pagination={false}
+        pagination={{
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          showSizeChanger: true,
+        }}
+        pageSizeOptions={5}
       />
-      <Pagination defaultCurrent={2} total={60} className="pagination" />
     </>
   )
 }

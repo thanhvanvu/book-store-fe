@@ -4,7 +4,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   BookOutlined,
-  VideoCameraOutlined,
   DollarOutlined,
 } from '@ant-design/icons'
 import { UserOutlined } from '@ant-design/icons'
@@ -26,6 +25,7 @@ import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
 import Footer from '../Footer/Footer'
 import { FiUsers } from 'react-icons/fi'
+import { useLocation } from 'react-router-dom'
 
 const { Header, Sider, Content } = Layout
 
@@ -65,6 +65,9 @@ const AdminLayout = () => {
     },
   ]
 
+  let href = window.location.href.split('/')
+  href = href[4]
+
   return (
     <>
       <Layout className="admin-page-layout">
@@ -73,11 +76,12 @@ const AdminLayout = () => {
           <Menu
             theme="light"
             mode="inline"
-            defaultSelectedKeys={[activeMenu]}
+            defaultSelectedKeys={['admin']}
+            selectedKeys={[href]}
             onClick={(e) => setActiveMenu(e.key)}
             items={[
               {
-                key: 'dashboard',
+                key: 'admin',
                 icon: <RxDashboard />,
                 label: <Link to="/admin">Dashboard</Link>,
               },
@@ -87,9 +91,9 @@ const AdminLayout = () => {
 
                 children: [
                   {
-                    key: 'crud',
+                    key: 'user',
                     icon: <FiUsers />,
-                    label: <Link to="/admin/user">CRUD</Link>,
+                    label: <Link to="/admin/user">Users</Link>,
                   },
                 ],
               },

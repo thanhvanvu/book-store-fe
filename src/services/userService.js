@@ -45,4 +45,23 @@ const handleLogout = () => {
 
   return axios(options)
 }
-export { handleRegister, handleLogin, handleFetchAccount, handleLogout }
+
+const handleGetAllUsers = () => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: '/api/v1/user',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+export {
+  handleRegister,
+  handleLogin,
+  handleFetchAccount,
+  handleLogout,
+  handleGetAllUsers,
+}
