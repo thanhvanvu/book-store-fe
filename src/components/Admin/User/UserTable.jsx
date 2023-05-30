@@ -6,18 +6,19 @@ import './UserTable.scss'
 import {
   handleGetAllUsers,
   handleGetUserWithPaginate,
+  handleSearchUserWithPaginate,
 } from '../../../services/userService'
 
 const columns = [
   {
     title: 'Id',
-    dataIndex: 'id',
+    dataIndex: '_id',
     sorter: true,
     align: 'center',
   },
   {
     title: 'Full Name',
-    dataIndex: 'fullname',
+    dataIndex: 'fullName',
     align: 'center',
   },
   {
@@ -27,7 +28,7 @@ const columns = [
   },
   {
     title: 'Phone number',
-    dataIndex: 'phoneNumber',
+    dataIndex: 'phone',
     align: 'center',
   },
   {
@@ -68,11 +69,11 @@ const UserTable = () => {
     total: 0,
   })
   const [data, setData] = useState([])
+  const [searchInput, setSearchInput] = useState({})
+  const [form] = Form.useForm()
 
   const getUserWithPaginate = async () => {
     const response = await handleGetUserWithPaginate(pagination)
-
-    let buildUserData = []
     if (response?.data?.result) {
       let userData = response.data.result
       let meta = response.data.meta
@@ -80,20 +81,9 @@ const UserTable = () => {
         ...pagination,
         total: meta.total,
       })
-      userData.map((user, index) => {
-        let object = {}
-        object.key = `${index}`
-        object.id = user._id
-        object.fullname = user.fullName
-        object.email = user.email
-        object.phoneNumber = user.phone
-        object.role = user.role
 
-        buildUserData.push(object)
-      })
+      setData(userData)
     }
-
-    setData(buildUserData)
   }
 
   // useEffect(() => {
@@ -112,22 +102,52 @@ const UserTable = () => {
     })
   }
 
-  const onFinish = (values) => {
-    console.log('Success:', values)
+  // search
+  const searchFilter = async (values) => {
+    // if all fiels are undefined, do nothing
+    if (!values.fullName && !values.email && !values.phone) {
+      return
+    }
+
+    // if input = undefined, set value = ''
+    Object.keys(values).map((key) => {
+      if (!values[key]) {
+        values[key] = ''
+      }
+    })
+
+    setSearchInput(values)
+
+    const response = await handleSearchUserWithPaginate(pagination, values)
+    if (response?.data?.result) {
+      let meta = response.data.meta
+      let userData = response.data.result
+      setPagination({
+        ...pagination,
+        total: meta.total,
+      })
+      setData(userData)
+    }
+  }
+
+  // clear input form
+  const clearForm = () => {
+    form.resetFields()
   }
 
   return (
     <>
       <Form
+        form={form}
         name="basic"
         labelCol={{ span: 12 }}
         wrapperCol={{ span: 24 }}
-        style={{ maxWidth: '100%' }}
-        onFinish={onFinish}
+        style={{ maxWidth: '100%', marginBottom: 30 }}
+        onFinish={searchFilter}
         autoComplete="off"
         layout="inline"
       >
-        <Form.Item labelCol={{ span: 24 }} label="Name" name="name">
+        <Form.Item labelCol={{ span: 24 }} label="Name" name="fullName">
           <Input placeholder="input name" />
         </Form.Item>
 
@@ -135,15 +155,21 @@ const UserTable = () => {
           <Input placeholder="input email" />
         </Form.Item>
 
-        <Form.Item labelCol={{ span: 24 }} label="Phone number" name="number">
+        <Form.Item labelCol={{ span: 24 }} label="Phone number" name="phone">
           <Input placeholder="input phone number" />
         </Form.Item>
-      </Form>
 
-      <Space wrap className="search-clear-button">
-        <Button type="primary">Search</Button>
-        <Button>Clear</Button>
-      </Space>
+        <Form.Item labelCol={{ span: 24 }} label="Action">
+          <Space>
+            <Button type="primary" htmlType="submit">
+              Search
+            </Button>
+            <Button htmlType="submit" onClick={clearForm}>
+              Clear
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
 
       <Table
         columns={columns}
@@ -156,6 +182,7 @@ const UserTable = () => {
           showSizeChanger: true,
         }}
         pageSizeOptions={5}
+        loading={false}
       />
     </>
   )

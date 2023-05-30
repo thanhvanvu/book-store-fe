@@ -71,6 +71,41 @@ const handleGetUserWithPaginate = (pagination) => {
 
   return axios(options)
 }
+
+const handleSearchUserWithPaginate = (pagination, searchInput) => {
+  let fullname
+  let email
+  let phone
+
+  if (searchInput.fullName === '') {
+    fullname = ''
+  } else {
+    fullname = `/${searchInput.fullName}/i`
+  }
+
+  if (searchInput.email === '') {
+    email = ''
+  } else {
+    email = `/${searchInput.email}/i`
+  }
+
+  if (searchInput.phone === '') {
+    phone = ''
+  } else {
+    phone = `/${searchInput.phone}/i`
+  }
+
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/user?current=${pagination.current}&pageSize=${pagination.pageSize}&fullName=${fullname}&email=${email}&phone=${phone}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
@@ -78,4 +113,5 @@ export {
   handleLogout,
   handleGetAllUsers,
   handleGetUserWithPaginate,
+  handleSearchUserWithPaginate,
 }
