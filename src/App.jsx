@@ -14,7 +14,10 @@ import { doFetchAccount, doLoginAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import AdminPage from './pages/AdminPage/AdminPage'
+import Book from './pages/Book/Book'
+import AdminLayout from './components/Admin/AdminLayout'
+import AdminContent from './pages/AdminPage/AdminContent'
+import UserTable from './components/Admin/User/UserTable'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -50,24 +53,6 @@ export default function App() {
     )
   }
 
-  const LayoutAdmin = () => {
-    // check if current page is admin?
-    const isAdminRoute = window.location.pathname.startsWith('/admin')
-
-    const user = useSelector((state) => state.account.user)
-    const userRole = user.role
-
-    return (
-      <div className="layout-app">
-        {/* check condition to not render header and footer for NotPermited page */}
-
-        <Outlet />
-
-        {isAdminRoute && userRole === 'ADMIN' && <Footer />}
-      </div>
-    )
-  }
-
   const router = createBrowserRouter([
     // layout for homepage
     {
@@ -88,7 +73,7 @@ export default function App() {
     // layout for admin page
     {
       path: '/admin',
-      element: <LayoutAdmin />,
+      element: <AdminLayout />,
       errorElement: <NotFound />,
 
       // Nested Route
@@ -98,13 +83,17 @@ export default function App() {
           element: (
             // if user is login, user can go to admin page. If not, redirect to login
             <ProtectedRoute>
-              <AdminPage />
+              <AdminContent />
             </ProtectedRoute>
           ),
         },
         {
+          path: 'book',
+          element: <Book />,
+        },
+        {
           path: 'user',
-          element: <Contact />,
+          element: <UserTable />,
         },
       ],
     },

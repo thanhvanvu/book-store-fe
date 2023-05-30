@@ -22,7 +22,7 @@ import { RxDashboard } from 'react-icons/rx'
 import AdminContent from './AdminContent'
 import './AdminPage.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { CiFaceSmile } from 'react-icons/ci'
 import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
@@ -60,7 +60,7 @@ function AdminPage() {
           Log out
         </div>
       ),
-      key: '1',
+      key: 'logout',
     },
   ]
 
@@ -155,7 +155,7 @@ function AdminPage() {
             background: colorBgContainer,
           }}
         >
-          <AdminContent />
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
