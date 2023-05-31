@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd'
-import { Button, Checkbox, Form, Input, Space, Pagination } from 'antd'
+import { Drawer, Table } from 'antd'
+import { Button, Form, Input, Space } from 'antd'
 
 import './UserTable.scss'
 import {
@@ -8,61 +8,7 @@ import {
   handleSearchUserWithPaginate,
   handleSortUserWithPaginate,
 } from '../../../services/userService'
-
-const columns = [
-  {
-    title: 'Id',
-    dataIndex: '_id',
-    align: 'center',
-  },
-  {
-    title: 'Full Name',
-    dataIndex: 'fullName',
-    align: 'center',
-    sorter: true,
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    align: 'center',
-    sorter: true,
-  },
-  {
-    title: 'Phone number',
-    dataIndex: 'phone',
-    align: 'center',
-    sorter: true,
-  },
-  {
-    title: 'Role',
-    dataIndex: 'role',
-    align: 'center',
-  },
-
-  {
-    title: 'Action',
-
-    render: (record) => {
-      return (
-        <>
-          <Space
-            wrap
-            className="search-clear-button"
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <Button type="primary" onClick={() => console.log(record)}>
-              Update
-            </Button>
-            <Button type="primary" danger>
-              Delete
-            </Button>
-          </Space>
-        </>
-      )
-    },
-    align: 'center',
-  },
-]
+import UserViewDetail from './UserViewDetail'
 
 const UserTable = () => {
   const [pagination, setPagination] = useState({
@@ -73,6 +19,74 @@ const UserTable = () => {
   const [data, setData] = useState([])
   const [searchInput, setSearchInput] = useState({})
   const [form] = Form.useForm()
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [viewDetailUser, setViewDetailUser] = useState({})
+
+  const columns = [
+    {
+      title: 'Id',
+      dataIndex: '_id',
+      align: 'center',
+      render: (text, record) => {
+        return (
+          <a
+            onClick={() => {
+              setOpenDrawer(true), setViewDetailUser(record)
+            }}
+          >
+            {record._id}
+          </a>
+        )
+      },
+    },
+    {
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      align: 'center',
+      sorter: true,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      align: 'center',
+      sorter: true,
+    },
+    {
+      title: 'Phone number',
+      dataIndex: 'phone',
+      align: 'center',
+      sorter: true,
+    },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      align: 'center',
+    },
+
+    {
+      title: 'Action',
+
+      render: (record) => {
+        return (
+          <>
+            <Space
+              wrap
+              className="search-clear-button"
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <Button type="primary" onClick={() => console.log(record)}>
+                Update
+              </Button>
+              <Button type="primary" danger>
+                Delete
+              </Button>
+            </Space>
+          </>
+        )
+      },
+      align: 'center',
+    },
+  ]
 
   const getUserWithPaginate = async () => {
     const response = await handleGetUserWithPaginate(pagination)
@@ -155,6 +169,11 @@ const UserTable = () => {
     form.resetFields()
   }
 
+  // set drawer is false
+  const handleOnClose = () => {
+    setOpenDrawer(false)
+  }
+
   return (
     <>
       <Form
@@ -203,6 +222,12 @@ const UserTable = () => {
         }}
         pageSizeOptions={5}
         loading={false}
+      />
+
+      <UserViewDetail
+        openDrawer={openDrawer}
+        onClose={handleOnClose}
+        viewDetailUser={viewDetailUser}
       />
     </>
   )
