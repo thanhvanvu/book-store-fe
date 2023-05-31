@@ -106,6 +106,20 @@ const handleSearchUserWithPaginate = (pagination, searchInput) => {
 
   return axios(options)
 }
+
+const handleSortUserWithPaginate = (pagination, query) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/user?current=${pagination.current}&pageSize=${pagination.pageSize}&sort=${query}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  console.log(options.url)
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
@@ -114,4 +128,5 @@ export {
   handleGetAllUsers,
   handleGetUserWithPaginate,
   handleSearchUserWithPaginate,
+  handleSortUserWithPaginate,
 }

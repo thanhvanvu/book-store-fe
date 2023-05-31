@@ -4,32 +4,34 @@ import { Button, Checkbox, Form, Input, Space, Pagination } from 'antd'
 
 import './UserTable.scss'
 import {
-  handleGetAllUsers,
   handleGetUserWithPaginate,
   handleSearchUserWithPaginate,
+  handleSortUserWithPaginate,
 } from '../../../services/userService'
 
 const columns = [
   {
     title: 'Id',
     dataIndex: '_id',
-    sorter: true,
     align: 'center',
   },
   {
     title: 'Full Name',
     dataIndex: 'fullName',
     align: 'center',
+    sorter: true,
   },
   {
     title: 'Email',
     dataIndex: 'email',
     align: 'center',
+    sorter: true,
   },
   {
     title: 'Phone number',
     dataIndex: 'phone',
     align: 'center',
+    sorter: true,
   },
   {
     title: 'Role',
@@ -86,20 +88,38 @@ const UserTable = () => {
     }
   }
 
-  // useEffect(() => {
-  //   getAllUser()
-  // }, [])
-
   useEffect(() => {
     getUserWithPaginate()
   }, [pagination.current, pagination.pageSize])
 
-  const onChange = (pagination, filters, sorter, extra) => {
+  const onChange = async (pagination, filters, sorter) => {
     setPagination({
       ...pagination,
       current: pagination.current,
       pageSize: pagination.pageSize,
     })
+
+    // sort function here
+    if (sorter?.field) {
+      const query =
+        sorter.order === 'ascend'
+          ? `${sorter.field}`
+          : sorter.order === 'descend'
+          ? `-${sorter.field}`
+          : ''
+
+      const response = await handleSortUserWithPaginate(pagination, query)
+      if (response?.data) {
+        let meta = response.data.meta
+        let userData = response.data.result
+        setPagination({
+          ...pagination,
+          total: meta.total,
+        })
+
+        setData(userData)
+      }
+    }
   }
 
   // search
