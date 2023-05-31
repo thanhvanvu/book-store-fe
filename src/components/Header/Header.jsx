@@ -35,27 +35,37 @@ const Header = () => {
     }
   }
 
-  const items = [
-    {
-      label: (
-        <a
-          href="https://www.antgroup.com"
-          style={{ color: 'rgb(128, 128, 137)' }}
-        >
-          Account management
-        </a>
-      ),
-      key: '0',
-    },
+  let items = [
     {
       label: (
         <div style={{ color: 'rgb(128, 128, 137)' }} onClick={logout}>
           Log out
         </div>
       ),
-      key: '1',
+      key: 'logout',
     },
   ]
+
+  // check if user is ADMIN, add submenu Admin management to items
+  if (user?.role === 'ADMIN') {
+    items.unshift({
+      label: (
+        <Link to="/admin" style={{ color: 'rgb(128, 128, 137)' }}>
+          Admin Management
+        </Link>
+      ),
+      key: 'admin',
+    })
+  } else {
+    items.unshift({
+      label: (
+        <Link to="#" style={{ color: 'rgb(128, 128, 137)' }}>
+          User Management
+        </Link>
+      ),
+      key: 'admin',
+    })
+  }
 
   return (
     <Row className="home-header">
@@ -73,8 +83,16 @@ const Header = () => {
         {isAuthenticated === true ? (
           <Dropdown menu={{ items }} trigger={['click']} className="account">
             <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                <Avatar size="medium" icon={<UserOutlined />} /> {user.fullName}
+              <Space style={{ gap: 5 }}>
+                <Avatar
+                  size="medium"
+                  icon={<UserOutlined />}
+                  src={
+                    import.meta.env.VITE_BACKEND_URL +
+                    `/images/avatar/${user.avatar}`
+                  }
+                />
+                {user.fullName}
                 <DownOutlined />
               </Space>
             </a>

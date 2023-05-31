@@ -9,6 +9,12 @@ import {
   handleSortUserWithPaginate,
 } from '../../../services/userService'
 import UserViewDetail from './UserViewDetail'
+import {
+  ReloadOutlined,
+  ExportOutlined,
+  ImportOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
 
 const UserTable = () => {
   const [pagination, setPagination] = useState({
@@ -174,6 +180,35 @@ const UserTable = () => {
     setOpenDrawer(false)
   }
 
+  // refreshTable
+
+  const RenderTitle = () => {
+    return (
+      <div className="user-title-header">
+        <span className="title-name">Table List Users</span>
+        <div className="right-content">
+          <Button type="primary">
+            <ExportOutlined />
+            Export
+          </Button>
+          <Button type="primary">
+            <ImportOutlined />
+            Import
+          </Button>
+          <Button type="primary">
+            <PlusOutlined />
+            Add new user
+          </Button>
+          <ReloadOutlined
+            className="icon-refresh"
+            style={{ cursor: 'pointer' }}
+            onClick={() => getUserWithPaginate()}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <Form
@@ -211,6 +246,7 @@ const UserTable = () => {
       </Form>
 
       <Table
+        title={RenderTitle}
         columns={columns}
         dataSource={data}
         onChange={onChange}

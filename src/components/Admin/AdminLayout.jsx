@@ -139,8 +139,15 @@ const AdminLayout = () => {
                 style={{ marginRight: '10px' }}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    <Avatar size="medium" icon={<UserOutlined />} />{' '}
+                  <Space style={{ gap: 5 }}>
+                    <Avatar
+                      size="medium"
+                      icon={<UserOutlined />}
+                      src={
+                        import.meta.env.VITE_BACKEND_URL +
+                        `/images/avatar/${user.avatar}`
+                      }
+                    />
                     {user.fullName}
                   </Space>
                 </a>
