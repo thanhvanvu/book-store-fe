@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons'
 
 import ModalAddNewUser from './ModalAddNewUser'
+import ModalCreateBulkUser from './ModalCreateBulkUser'
 
 const UserTable = () => {
   const [pagination, setPagination] = useState({
@@ -30,6 +31,7 @@ const UserTable = () => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [viewDetailUser, setViewDetailUser] = useState({})
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenImportModal, setIsOpenImportModal] = useState(false)
 
   const columns = [
     {
@@ -188,6 +190,11 @@ const UserTable = () => {
     setIsOpenModal(!isOpenModal)
   }
 
+  // handle to open/close modal import user
+  const handleModalImport = () => {
+    setIsOpenImportModal(!isOpenImportModal)
+  }
+
   const RenderTitle = () => {
     return (
       <div className="user-title-header">
@@ -197,14 +204,17 @@ const UserTable = () => {
             <ExportOutlined />
             Export
           </Button>
-          <Button type="primary">
+
+          <Button type="primary" onClick={handleModalImport}>
             <ImportOutlined />
             Import
           </Button>
+
           <Button type="primary" onClick={handleOpenCloseModal}>
             <PlusOutlined />
             Add new user
           </Button>
+
           <ReloadOutlined
             className="icon-refresh"
             style={{ cursor: 'pointer' }}
@@ -279,6 +289,11 @@ const UserTable = () => {
         isOpenModal={isOpenModal}
         handleOpenCloseModal={handleOpenCloseModal}
         getUserWithPaginate={getUserWithPaginate}
+      />
+
+      <ModalCreateBulkUser
+        isOpenImportModal={isOpenImportModal}
+        handleModalImport={handleModalImport}
       />
     </>
   )
