@@ -6,6 +6,7 @@ import { InboxOutlined } from '@ant-design/icons'
 
 import { message, Upload } from 'antd'
 import { handleCreateBulkUser } from '../../../services/userService'
+import template from './template.xlsx?url'
 
 const { Dragger } = Upload
 
@@ -146,7 +147,7 @@ const ModalCreateBulkUser = (props) => {
     >
       <Divider></Divider>
 
-      <Dragger {...propsUpload} fileList={fileList}>
+      <Dragger {...propsUpload} fileList={fileList} onDownload={dataFromSheet}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -156,6 +157,16 @@ const ModalCreateBulkUser = (props) => {
         <p className="ant-upload-hint">
           Support for a single. Only accept .csv, .xls, .xlsx
         </p>
+        <a
+          href={template}
+          download
+          // stopPropagation to prevent double event
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+        >
+          Download template sample
+        </a>
       </Dragger>
 
       <Divider></Divider>
