@@ -133,6 +133,20 @@ const handleCreateNewUser = (userInput) => {
 
   return axios(options)
 }
+
+const handleCreateBulkUser = (userInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/user/bulk-create`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: userInput,
+  }
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
@@ -143,4 +157,5 @@ export {
   handleSearchUserWithPaginate,
   handleSortUserWithPaginate,
   handleCreateNewUser,
+  handleCreateBulkUser,
 }

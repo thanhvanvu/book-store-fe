@@ -5,6 +5,7 @@ import { Button, Divider, Modal, Space, Table, Tag } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
 import { message, Upload } from 'antd'
+import { handleCreateBulkUser } from '../../../services/userService'
 
 const { Dragger } = Upload
 
@@ -65,6 +66,7 @@ const ModalCreateBulkUser = (props) => {
         // reset data when dropping file
         setDataFromSheet([])
       }
+
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`)
 
@@ -94,6 +96,35 @@ const ModalCreateBulkUser = (props) => {
     },
   }
 
+  // handle submit sheet
+  const hanleSubmitSheet = async () => {
+    setIsSubmitSheet(true)
+    const response = await handleCreateBulkUser(dataFromSheet)
+    if (response?.data) {
+      setIsSubmitSheet(false)
+
+      if (response.data.countError === 0) {
+        message.success(
+          `Created Successfully: ${response.data.countSuccess} records`
+        )
+
+        // close the modal
+        props.handleModalImport()
+
+        // set fileList = []
+        setFileList([])
+
+        // reset dataFromSheet
+        setDataFromSheet([])
+
+        // refesh table
+        props.getUserWithPaginate()
+      } else {
+        message.error(`Created Error: ${response.data.countError} records`)
+      }
+    }
+  }
+
   return (
     <Modal
       title="Import data user"
@@ -107,6 +138,7 @@ const ModalCreateBulkUser = (props) => {
         // reset dataFromSheet
         setDataFromSheet([])
       }}
+      onOk={hanleSubmitSheet}
       okText="Import data"
       width={'70vw'}
       okButtonProps={{ disabled: dataFromSheet.length > 0 ? false : true }}

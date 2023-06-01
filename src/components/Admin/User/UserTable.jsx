@@ -292,6 +292,7 @@ const UserTable = () => {
       />
 
       <ModalCreateBulkUser
+        getUserWithPaginate={getUserWithPaginate}
         isOpenImportModal={isOpenImportModal}
         handleModalImport={handleModalImport}
       />
