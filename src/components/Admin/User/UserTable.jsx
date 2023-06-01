@@ -16,6 +16,8 @@ import {
   PlusOutlined,
 } from '@ant-design/icons'
 
+import ModalAddNewUser from './ModalAddNewUser'
+
 const UserTable = () => {
   const [pagination, setPagination] = useState({
     current: 1,
@@ -27,6 +29,7 @@ const UserTable = () => {
   const [form] = Form.useForm()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [viewDetailUser, setViewDetailUser] = useState({})
+  const [isOpenModal, setIsOpenModal] = useState(false)
 
   const columns = [
     {
@@ -180,7 +183,10 @@ const UserTable = () => {
     setOpenDrawer(false)
   }
 
-  // refreshTable
+  // handle on click to open modal add new user
+  const handleOpenCloseModal = () => {
+    setIsOpenModal(!isOpenModal)
+  }
 
   const RenderTitle = () => {
     return (
@@ -195,7 +201,7 @@ const UserTable = () => {
             <ImportOutlined />
             Import
           </Button>
-          <Button type="primary">
+          <Button type="primary" onClick={handleOpenCloseModal}>
             <PlusOutlined />
             Add new user
           </Button>
@@ -255,6 +261,9 @@ const UserTable = () => {
           pageSize: pagination.pageSize,
           total: pagination.total,
           showSizeChanger: true,
+          showTotal: (total, range) => {
+            return <div>{range[0] + '-' + range[1] + ' out of ' + total}</div>
+          },
         }}
         pageSizeOptions={5}
         loading={false}
@@ -264,6 +273,12 @@ const UserTable = () => {
         openDrawer={openDrawer}
         onClose={handleOnClose}
         viewDetailUser={viewDetailUser}
+      />
+
+      <ModalAddNewUser
+        isOpenModal={isOpenModal}
+        handleOpenCloseModal={handleOpenCloseModal}
+        getUserWithPaginate={getUserWithPaginate}
       />
     </>
   )

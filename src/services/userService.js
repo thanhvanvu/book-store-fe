@@ -116,7 +116,20 @@ const handleSortUserWithPaginate = (pagination, query) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  console.log(options.url)
+
+  return axios(options)
+}
+
+const handleCreateNewUser = (userInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/user`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: userInput,
+  }
 
   return axios(options)
 }
@@ -129,4 +142,5 @@ export {
   handleGetUserWithPaginate,
   handleSearchUserWithPaginate,
   handleSortUserWithPaginate,
+  handleCreateNewUser,
 }
