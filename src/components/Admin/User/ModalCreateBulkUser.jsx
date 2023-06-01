@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { read, utils, writeFileXLSX } from 'xlsx'
 
 import { Button, Divider, Modal, Space, Table, Tag } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
@@ -9,79 +10,28 @@ const { Dragger } = Upload
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
+    title: 'Full name',
+    dataIndex: 'fullName',
+    key: 'fullName',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green'
-          if (tag === 'loser') {
-            color = 'volcano'
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          )
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-]
-
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    title: 'Phone number',
+    dataIndex: 'phone',
+    key: 'phone',
   },
 ]
 
 const ModalCreateBulkUser = (props) => {
   let isOpenImportModal = props.isOpenImportModal
+  const [dataFromSheet, setDataFromSheet] = useState([])
+  const [fileList, setFileList] = useState([])
+  const [isSubmitSheet, setIsSubmitSheet] = useState(false)
 
   // https://stackoverflow.com/questions/51514757/action-function-is-required-with-antd-upload-control-but-i-dont-need-it
   const dummyRequest = ({ file, onSuccess }) => {
@@ -103,13 +53,38 @@ const ModalCreateBulkUser = (props) => {
     // use customRequest to get file only, not uploading
     customRequest: dummyRequest,
 
-    onChange(info) {
+    async onChange(info) {
       const { status } = info.file
+
+      // set file list before uploading
+      setFileList(info.fileList)
+
       if (status !== 'uploading') {
         console.log(info.file, info.fileList)
+
+        // reset data when dropping file
+        setDataFromSheet([])
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`)
+
+        // https://docs.sheetjs.com/docs/demos/frontend/react/
+        if (info.fileList && info.fileList.length > 0) {
+          const file = await info.fileList[0].originFileObj.arrayBuffer()
+          const wb = read(file)
+          const workSheet = wb.Sheets[wb.SheetNames[0]] // get the first worksheet
+          const data = utils.sheet_to_json(workSheet, {
+            header: ['fullName', 'email', 'phone'],
+            range: 1,
+          })
+
+          if (data && data.length > 0) {
+            data.map((data, index) => {
+              data.password = '123456789'
+            })
+            setDataFromSheet(data)
+          }
+        }
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`)
       }
@@ -125,13 +100,21 @@ const ModalCreateBulkUser = (props) => {
       open={isOpenImportModal}
       onCancel={() => {
         props.handleModalImport()
+
+        // set fileList = []
+        setFileList([])
+
+        // reset dataFromSheet
+        setDataFromSheet([])
       }}
       okText="Import data"
       width={'70vw'}
+      okButtonProps={{ disabled: dataFromSheet.length > 0 ? false : true }}
+      confirmLoading={isSubmitSheet}
     >
       <Divider></Divider>
 
-      <Dragger {...propsUpload}>
+      <Dragger {...propsUpload} fileList={fileList}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -146,9 +129,12 @@ const ModalCreateBulkUser = (props) => {
       <Divider></Divider>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={dataFromSheet}
         title={() => {
           return <span>File information: </span>
+        }}
+        pagination={{
+          pageSize: 5,
         }}
       />
     </Modal>
