@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Drawer, Table } from 'antd'
+import { Drawer, Popconfirm, Popover, Spin, Table, message } from 'antd'
 import { Button, Form, Input, Space } from 'antd'
 
 import './UserTable.scss'
 import {
+  handleDeleteUser,
   handleGetUserWithPaginate,
   handleSearchUserWithPaginate,
   handleSortUserWithPaginate,
@@ -29,8 +30,8 @@ const UserTable = () => {
     pageSize: 5,
     total: 0,
   })
+  const [isLoadingTable, setIsLoadingTable] = useState(false)
   const [data, setData] = useState([])
-  const [searchInput, setSearchInput] = useState({})
   const [form] = Form.useForm()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [viewDetailUser, setViewDetailUser] = useState({})
@@ -89,13 +90,22 @@ const UserTable = () => {
             <Space
               wrap
               className="search-clear-button"
-              style={{ display: 'flex', justifyContent: 'center' }}
+              style={{ display: 'flex', justifyContent: 'space-around' }}
             >
               <EditOutlined
                 style={{ color: '#FFCD01', cursor: 'pointer' }}
                 onClick={() => handleOpenEditModal(userData)}
               />
-              <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
+              <Popconfirm
+                placement="left"
+                title="Delete user"
+                description="Are you sure to delete this user ?"
+                onConfirm={() => deleteUser(userData)}
+                okText="Delete"
+                cancelText="Cancel"
+              >
+                <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
+              </Popconfirm>
             </Space>
           </>
         )
@@ -105,6 +115,7 @@ const UserTable = () => {
   ]
 
   const getUserWithPaginate = async () => {
+    setIsLoadingTable(true)
     const response = await handleGetUserWithPaginate(pagination)
     if (response?.data?.result) {
       let userData = response.data.result
@@ -115,6 +126,7 @@ const UserTable = () => {
       })
 
       setData(userData)
+      setIsLoadingTable(false)
     }
   }
 
@@ -166,8 +178,6 @@ const UserTable = () => {
       }
     })
 
-    setSearchInput(values)
-
     const response = await handleSearchUserWithPaginate(pagination, values)
     if (response?.data?.result) {
       let meta = response.data.meta
@@ -216,6 +226,18 @@ const UserTable = () => {
       setDataUserEdit(userData)
     }
     setIsOpenEditModal(!isOpenEditModal)
+  }
+
+  // handle delete user
+  const deleteUser = async (userInput) => {
+    const userId = userInput._id
+    const response = await handleDeleteUser(userId)
+    if (response?.data) {
+      message.success('Delete User successfully!')
+      await getUserWithPaginate()
+    } else {
+      message.error('You can not delete this user!')
+    }
   }
 
   const RenderTitle = () => {
@@ -284,23 +306,25 @@ const UserTable = () => {
         </Form.Item>
       </Form>
 
-      <Table
-        title={RenderTitle}
-        columns={columns}
-        dataSource={data}
-        onChange={onChange}
-        pagination={{
-          current: pagination.current,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          showTotal: (total, range) => {
-            return <div>{range[0] + '-' + range[1] + ' out of ' + total}</div>
-          },
-        }}
-        pageSizeOptions={5}
-        loading={false}
-      />
+      <Spin tip="Loading..." spinning={isLoadingTable}>
+        <Table
+          title={RenderTitle}
+          columns={columns}
+          dataSource={data}
+          onChange={onChange}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
+            showSizeChanger: true,
+            showTotal: (total, range) => {
+              return <div>{range[0] + '-' + range[1] + ' out of ' + total}</div>
+            },
+          }}
+          pageSizeOptions={5}
+          loading={false}
+        />
+      </Spin>
 
       <UserViewDetail
         openDrawer={openDrawer}

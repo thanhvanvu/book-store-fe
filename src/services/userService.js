@@ -161,6 +161,19 @@ const handleUpdateUser = (userInput) => {
 
   return axios(options)
 }
+
+const handleDeleteUser = (userId) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'delete',
+    url: `/api/v1/user/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
@@ -173,4 +186,5 @@ export {
   handleCreateNewUser,
   handleCreateBulkUser,
   handleUpdateUser,
+  handleDeleteUser,
 }
