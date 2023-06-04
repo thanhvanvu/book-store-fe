@@ -158,9 +158,10 @@ const ModalCreateBulkUser = (props) => {
           Support for a single. Only accept .csv, .xls, .xlsx
         </p>
         <a
+          className="ant-upload-hint"
           href={template}
           download
-          // stopPropagation to prevent double event
+          // stopPropagation to prevent the event from parent
           onClick={(e) => {
             e.stopPropagation()
           }}

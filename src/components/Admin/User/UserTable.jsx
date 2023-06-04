@@ -15,6 +15,7 @@ import {
   ImportOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
+import { read, utils, writeFileXLSX } from 'xlsx'
 
 import ModalAddNewUser from './ModalAddNewUser'
 import ModalCreateBulkUser from './ModalCreateBulkUser'
@@ -195,12 +196,22 @@ const UserTable = () => {
     setIsOpenImportModal(!isOpenImportModal)
   }
 
+  // https://docs.sheetjs.com/docs/demos/frontend/react/
+  const handleExport = () => {
+    if (data.length > 0) {
+      const workSheet = utils.json_to_sheet(data)
+      const workBook = utils.book_new()
+      utils.book_append_sheet(workBook, workSheet, 'Data')
+      writeFileXLSX(workBook, 'UserList.xlsx')
+    }
+  }
+
   const RenderTitle = () => {
     return (
       <div className="user-title-header">
         <span className="title-name">Table List Users</span>
         <div className="right-content">
-          <Button type="primary">
+          <Button type="primary" onClick={handleExport}>
             <ExportOutlined />
             Export
           </Button>
