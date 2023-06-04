@@ -147,6 +147,20 @@ const handleCreateBulkUser = (userInput) => {
 
   return axios(options)
 }
+
+const handleUpdateUser = (userInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'put',
+    url: `/api/v1/user`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: userInput,
+  }
+
+  return axios(options)
+}
 export {
   handleRegister,
   handleLogin,
@@ -158,4 +172,5 @@ export {
   handleSortUserWithPaginate,
   handleCreateNewUser,
   handleCreateBulkUser,
+  handleUpdateUser,
 }

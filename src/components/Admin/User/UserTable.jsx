@@ -14,11 +14,14 @@ import {
   ExportOutlined,
   ImportOutlined,
   PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
 import { read, utils, writeFileXLSX } from 'xlsx'
 
 import ModalAddNewUser from './ModalAddNewUser'
 import ModalCreateBulkUser from './ModalCreateBulkUser'
+import ModalEditUser from './ModalEditUser'
 
 const UserTable = () => {
   const [pagination, setPagination] = useState({
@@ -33,6 +36,8 @@ const UserTable = () => {
   const [viewDetailUser, setViewDetailUser] = useState({})
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenImportModal, setIsOpenImportModal] = useState(false)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  const [dataUserEdit, setDataUserEdit] = useState({})
 
   const columns = [
     {
@@ -78,7 +83,7 @@ const UserTable = () => {
     {
       title: 'Action',
 
-      render: (record) => {
+      render: (userData) => {
         return (
           <>
             <Space
@@ -86,12 +91,11 @@ const UserTable = () => {
               className="search-clear-button"
               style={{ display: 'flex', justifyContent: 'center' }}
             >
-              <Button type="primary" onClick={() => console.log(record)}>
-                Update
-              </Button>
-              <Button type="primary" danger>
-                Delete
-              </Button>
+              <EditOutlined
+                style={{ color: '#FFCD01', cursor: 'pointer' }}
+                onClick={() => handleOpenEditModal(userData)}
+              />
+              <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
             </Space>
           </>
         )
@@ -206,6 +210,14 @@ const UserTable = () => {
     }
   }
 
+  const handleOpenEditModal = (userData) => {
+    // fix bug when closing a modal
+    if (isOpenEditModal === false) {
+      setDataUserEdit(userData)
+    }
+    setIsOpenEditModal(!isOpenEditModal)
+  }
+
   const RenderTitle = () => {
     return (
       <div className="user-title-header">
@@ -306,6 +318,13 @@ const UserTable = () => {
         getUserWithPaginate={getUserWithPaginate}
         isOpenImportModal={isOpenImportModal}
         handleModalImport={handleModalImport}
+      />
+
+      <ModalEditUser
+        handleOpenEditModal={handleOpenEditModal}
+        isOpenEditModal={isOpenEditModal}
+        dataUserEdit={dataUserEdit}
+        getUserWithPaginate={getUserWithPaginate}
       />
     </>
   )
