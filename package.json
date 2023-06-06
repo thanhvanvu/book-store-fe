@@ -24,6 +24,7 @@
     "react-spinners": "^0.13.8",
     "sass": "^1.62.1",
     "save": "^2.9.0",
+    "uid": "^2.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

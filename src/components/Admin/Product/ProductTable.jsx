@@ -3,7 +3,7 @@ import { Popconfirm, Spin, Table } from 'antd'
 import { Button, Form, Input, Space } from 'antd'
 import moment from 'moment'
 import './ProductTable.scss'
-import UserViewDetail from './UserViewDetail'
+import UserViewDetail from './ProductViewDetail'
 import {
   ReloadOutlined,
   ExportOutlined,
@@ -19,6 +19,7 @@ import {
   handleSearchProductWithPaginate,
   handleSortProductWithPaginate,
 } from '../../../services/productService'
+import ProductViewDetail from './ProductViewDetail'
 
 const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -31,7 +32,7 @@ const ProductTable = () => {
   const [data, setData] = useState([])
   const [form] = Form.useForm()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [viewDetailUser, setViewDetailUser] = useState({})
+  const [viewDetailProduct, setViewDetailProduct] = useState({})
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const [dataUserEdit, setDataUserEdit] = useState({})
@@ -45,7 +46,7 @@ const ProductTable = () => {
         return (
           <a
             onClick={() => {
-              setOpenDrawer(true), setViewDetailUser(record)
+              setOpenDrawer(true), setViewDetailProduct(record)
             }}
           >
             {record._id}
@@ -100,7 +101,7 @@ const ProductTable = () => {
                 style={{ color: '#FFCD01', cursor: 'pointer' }}
                 onClick={() => handleOpenEditModal(userData)}
               />
-              <Popconfirm
+              {/* <Popconfirm
                 placement="left"
                 title="Delete user"
                 description="Are you sure to delete this user ?"
@@ -109,7 +110,7 @@ const ProductTable = () => {
                 cancelText="Cancel"
               >
                 <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
-              </Popconfirm>
+              </Popconfirm> */}
             </Space>
           </>
         )
@@ -324,10 +325,10 @@ const ProductTable = () => {
         />
       </Spin>
 
-      <UserViewDetail
+      <ProductViewDetail
         openDrawer={openDrawer}
         onClose={handleOnClose}
-        viewDetailUser={viewDetailUser}
+        viewDetailProduct={viewDetailProduct}
       />
 
       <ModalAddNewProduct
