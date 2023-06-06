@@ -6,7 +6,7 @@ import { handleCreateNewUser } from '../../../services/userService'
 //   console.log('Success:', values)
 // }
 
-const ModalAddNewUser = (props) => {
+const ModalAddNewProduct = (props) => {
   let isOpenModal = props.isOpenModal
   const [form] = Form.useForm()
   const [isSubmit, setIsSubmit] = useState(false)
@@ -117,4 +117,4 @@ const ModalAddNewUser = (props) => {
   )
 }
 
-export default ModalAddNewUser
+export default ModalAddNewProduct

@@ -14,10 +14,10 @@ import { doFetchAccount, doLoginAction } from './redux/account/accountSlice'
 import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import Book from './pages/Book/Book'
 import AdminLayout from './components/Admin/AdminLayout'
 import AdminContent from './pages/AdminPage/AdminContent'
 import UserTable from './components/Admin/User/UserTable'
+import ProductTable from './components/Admin/Product/ProductTable'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -89,7 +89,7 @@ export default function App() {
         },
         {
           path: 'book',
-          element: <Book />,
+          element: <ProductTable />,
         },
         {
           path: 'user',
