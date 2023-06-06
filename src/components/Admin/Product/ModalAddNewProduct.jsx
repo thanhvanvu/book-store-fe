@@ -12,7 +12,10 @@ import {
 } from 'antd'
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { handleFetchCategory } from '../../../services/productService'
+import {
+  handleFetchCategory,
+  handleUploadImage,
+} from '../../../services/productService'
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader()
@@ -26,9 +29,12 @@ const ModalAddNewProduct = (props) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [imageUrlThumbnail, setImageUrlThumbnail] = useState()
   const [imageUrlProduct, setImageUrlProduct] = useState([])
+  const [imgProductUploaded, setImgProductUploaded] = useState([])
+  const [imgThumbnailUploaded, setImgThumbnailUploaded] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingSlider, setLoadingSlider] = useState(false)
   const [categorySelect, setCategorySelect] = useState()
+  const [previewOpen, setPreviewOpen] = useState(false)
 
   const handleChangeThumbnail = (info) => {
     if (info.file.status === 'uploading') {
@@ -53,15 +59,9 @@ const ModalAddNewProduct = (props) => {
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, (url) => {
         setLoadingSlider(false)
-
         setImageUrlProduct(url)
       })
     }
-  }
-
-  const handleCancel = () => {
-    form.resetFields()
-    props.handleOpenCloseModal()
   }
 
   useEffect(() => {
@@ -89,6 +89,31 @@ const ModalAddNewProduct = (props) => {
     console.log(value)
   }
 
+  const handleUploadThumbnail = async ({ file, onSuccess }) => {
+    const response = await handleUploadImage(file)
+    if (response?.data) {
+      setImgThumbnailUploaded(response.data.fileUploaded)
+    }
+    onSuccess('ok')
+  }
+
+  const handleUploadProductImage = async ({ file, onSuccess }) => {
+    const response = await handleUploadImage(file)
+
+    //https://stackoverflow.com/questions/55823296/reactjs-prevstate-in-the-new-usestate-react-hook
+    if (response?.data) {
+      setImgProductUploaded((prevState) => [
+        ...prevState,
+        response.data.fileUploaded,
+      ])
+    }
+    onSuccess('ok')
+  }
+
+  const createNewProduct = async () => {
+    console.log(imgProductUploaded)
+  }
+
   return (
     <>
       <Modal
@@ -99,7 +124,10 @@ const ModalAddNewProduct = (props) => {
           form.submit()
         }} // when click ok from modal, onFinish is trigger
         okText="Create user"
-        onCancel={handleCancel}
+        onCancel={() => {
+          form.resetFields()
+          props.handleOpenCloseModal()
+        }}
         confirmLoading={isSubmit}
       >
         <Divider></Divider>
@@ -107,9 +135,8 @@ const ModalAddNewProduct = (props) => {
         <Form
           form={form}
           name="basic"
-          size=""
           style={{ maxWidth: '100%' }}
-          // onFinish={createNewUser}
+          onFinish={createNewProduct}
           autoComplete="off"
         >
           <Row gutter={15}>
@@ -206,7 +233,7 @@ const ModalAddNewProduct = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your phone number!',
+                    message: 'Please input your sold number!',
                   },
                 ]}
               >
@@ -219,23 +246,17 @@ const ModalAddNewProduct = (props) => {
                 labelCol={{ span: 24 }}
                 label="Thumbnail image"
                 name="thumbnail"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               >
                 <Upload
+                  onPreview={() => {
+                    setPreviewOpen(true)
+                  }}
                   multiple={false}
                   maxCount={1}
                   name="thumbnail"
                   listType="picture-card"
                   className="avatar-uploader"
-                  customRequest={({ onSuccess }) => {
-                    setTimeout(() => {
-                      onSuccess('ok')
-                    }, 0)
-                  }}
+                  customRequest={handleUploadThumbnail}
                   onChange={handleChangeThumbnail}
                 >
                   <div>
@@ -243,6 +264,21 @@ const ModalAddNewProduct = (props) => {
                     <div style={{ marginTop: 8 }}>Upload</div>
                   </div>
                 </Upload>
+
+                <Modal
+                  open={previewOpen}
+                  // title={previewTitle}
+                  footer={null}
+                  onCancel={() => {
+                    setPreviewOpen(false)
+                  }}
+                >
+                  <img
+                    alt="example"
+                    style={{ width: '100%' }}
+                    src={imageUrlThumbnail}
+                  />
+                </Modal>
               </Form.Item>
             </Col>
 
@@ -251,23 +287,13 @@ const ModalAddNewProduct = (props) => {
                 labelCol={{ span: 24 }}
                 label="Product image"
                 name="slider"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               >
                 <Upload
                   multiple={true}
-                  maxCount={5}
                   name="slider"
                   listType="picture-card"
                   className="avatar-uploader"
-                  customRequest={({ onSuccess }) => {
-                    setTimeout(() => {
-                      onSuccess('ok')
-                    }, 0)
-                  }}
+                  customRequest={handleUploadProductImage}
                   onChange={handleChangeProductImage}
                 >
                   <div>

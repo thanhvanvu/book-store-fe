@@ -1,3 +1,4 @@
+import { Form } from 'antd'
 import axios from '../utils/axios-customize'
 
 const handleSortProductWithPaginate = (pagination, query) => {
@@ -44,8 +45,27 @@ const handleFetchCategory = () => {
 
   return axios(options)
 }
+
+const handleUploadImage = (fileImg) => {
+  const bodyFormData = new FormData()
+  bodyFormData.append('fileImg', fileImg)
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/file/upload`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+      'upload-type': 'book',
+    },
+    data: bodyFormData,
+  }
+
+  return axios(options)
+}
 export {
   handleSortProductWithPaginate,
   handleSearchProductWithPaginate,
   handleFetchCategory,
+  handleUploadImage,
 }
