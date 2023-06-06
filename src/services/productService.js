@@ -20,7 +20,6 @@ const handleSearchProductWithPaginate = (pagination, keySearch) => {
   }&mainText=${'/' + keySearch.mainText + '/i'}&author=${
     '/' + keySearch.author + '/i'
   }&category=${'/' + keySearch.category + '/i'}`
-  console.log(query)
   const token = localStorage.getItem('access_token')
   const options = {
     method: 'get',
@@ -32,4 +31,21 @@ const handleSearchProductWithPaginate = (pagination, keySearch) => {
 
   return axios(options)
 }
-export { handleSortProductWithPaginate, handleSearchProductWithPaginate }
+
+const handleFetchCategory = () => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/database/category`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+export {
+  handleSortProductWithPaginate,
+  handleSearchProductWithPaginate,
+  handleFetchCategory,
+}
