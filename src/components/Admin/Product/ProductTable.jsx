@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Popconfirm, Spin, Table } from 'antd'
+import { Popconfirm, Spin, Table, message } from 'antd'
 import { Button, Form, Input, Space } from 'antd'
 import moment from 'moment'
 import './ProductTable.scss'
@@ -15,6 +15,7 @@ import { utils, writeFileXLSX } from 'xlsx'
 
 import ModalAddNewProduct from './ModalAddNewProduct'
 import {
+  handleDeleteProduct,
   handleSearchProductWithPaginate,
   handleSortProductWithPaginate,
 } from '../../../services/productService'
@@ -101,16 +102,16 @@ const ProductTable = () => {
                 style={{ color: '#FFCD01', cursor: 'pointer' }}
                 onClick={() => handleOpenEditModal(productData)}
               />
-              {/* <Popconfirm
+              <Popconfirm
                 placement="left"
-                title="Delete user"
-                description="Are you sure to delete this user ?"
-                onConfirm={() => deleteUser(userData)}
+                title="Delete product"
+                description="Are you sure to delete this product ?"
+                onConfirm={() => deleteProduct(productData)}
                 okText="Delete"
                 cancelText="Cancel"
               >
                 <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
-              </Popconfirm> */}
+              </Popconfirm>
             </Space>
           </>
         )
@@ -218,17 +219,17 @@ const ProductTable = () => {
     setIsOpenEditModal(!isOpenEditModal)
   }
 
-  // // handle delete user
-  // const deleteUser = async (userInput) => {
-  //   const userId = userInput._id
-  //   const response = await handleDeleteUser(userId)
-  //   if (response?.data) {
-  //     message.success('Delete User successfully!')
-  //     await getUserWithPaginate()
-  //   } else {
-  //     message.error('You can not delete this user!')
-  //   }
-  // }
+  // handle delete user
+  const deleteProduct = async (productData) => {
+    const userId = productData._id
+    const response = await handleDeleteProduct(userId)
+    if (response?.data) {
+      message.success('Delete product successfully!')
+      await getSortedProductWithPaginate()
+    } else {
+      message.error('You can not delete this product!')
+    }
+  }
 
   const RenderTitle = () => {
     return (

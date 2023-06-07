@@ -91,6 +91,19 @@ const handleUpdateProduct = (productInput) => {
 
   return axios(options)
 }
+
+const handleDeleteProduct = (productId) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'delete',
+    url: `/api/v1/book/${productId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
 export {
   handleSortProductWithPaginate,
   handleSearchProductWithPaginate,
@@ -98,4 +111,5 @@ export {
   handleUploadImage,
   handleCreateNewProduct,
   handleUpdateProduct,
+  handleDeleteProduct,
 }
