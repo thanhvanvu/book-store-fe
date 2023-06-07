@@ -63,9 +63,39 @@ const handleUploadImage = (fileImg) => {
 
   return axios(options)
 }
+
+const handleCreateNewProduct = (productInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/book`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: productInput,
+  }
+
+  return axios(options)
+}
+
+const handleUpdateProduct = (productInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'put',
+    url: `/api/v1/book/${productInput._id}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: productInput,
+  }
+
+  return axios(options)
+}
 export {
   handleSortProductWithPaginate,
   handleSearchProductWithPaginate,
   handleFetchCategory,
   handleUploadImage,
+  handleCreateNewProduct,
+  handleUpdateProduct,
 }

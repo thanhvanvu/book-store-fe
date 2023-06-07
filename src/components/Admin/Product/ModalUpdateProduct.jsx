@@ -10,13 +10,13 @@ import {
   Select,
   Upload,
   message,
+  notification,
 } from 'antd'
-
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-
+import { uid } from 'uid'
 import {
-  handleCreateNewProduct,
   handleFetchCategory,
+  handleUpdateProduct,
   handleUploadImage,
 } from '../../../services/productService'
 
@@ -26,19 +26,31 @@ const getBase64 = (img, callback) => {
   reader.readAsDataURL(img)
 }
 
-const ModalAddNewProduct = (props) => {
-  let isOpenModal = props.isOpenModal
+const ModalUpdateProduct = (props) => {
+  const isOpenEditModal = props.isOpenEditModal
+  const dataProductUpdate = props.dataProductUpdate
+
   const [form] = Form.useForm()
+  const [productImgList, setProductImgList] = useState([])
+  const [thumbnail, setThumbnail] = useState([])
   const [isSubmit, setIsSubmit] = useState(false)
-
-  const [imgProductUploaded, setImgProductUploaded] = useState([])
-  const [imgThumbnailUploaded, setImgThumbnailUploaded] = useState('')
-
   const [loading, setLoading] = useState(false)
   const [loadingSlider, setLoadingSlider] = useState(false)
-  const [categorySelect, setCategorySelect] = useState()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState()
+  const [categorySelect, setCategorySelect] = useState()
+
+  useEffect(() => {
+    // set initial field for the form
+    form.setFieldsValue(dataProductUpdate)
+
+    buildImageList(dataProductUpdate)
+
+    // clean up function => component will unmount
+    return () => {
+      form.resetFields()
+    }
+  }, [dataProductUpdate, form])
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -61,6 +73,52 @@ const ModalAddNewProduct = (props) => {
     fetchCategory()
   }, [])
 
+  // build image list for image slider
+  const buildImageList = (productDetail) => {
+    if (productDetail?._id) {
+      let thumbnail = []
+      let imageList = []
+      // viewDetailProduct.
+
+      if (productDetail?.thumbnail) {
+        let object = {}
+        object.uid = uid()
+        object.name = productDetail.thumbnail
+        object.url =
+          import.meta.env.VITE_BACKEND_URL +
+          `/images/book/${productDetail.thumbnail}`
+        object.status = 'done'
+
+        thumbnail.push(object)
+        setThumbnail(thumbnail)
+      }
+
+      if (productDetail && productDetail.slider) {
+        let sliders = productDetail.slider
+        sliders.map((slider) => {
+          let object = {}
+          object.uid = uid()
+          object.name = slider
+          object.url =
+            import.meta.env.VITE_BACKEND_URL + `/images/book/${slider}`
+          object.status = 'done'
+          imageList.push(object)
+        })
+
+        setProductImgList(imageList)
+      }
+    }
+  }
+
+  const handlePreviewImage = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+  }
+
   const handleChangeThumbnail = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true)
@@ -72,6 +130,7 @@ const ModalAddNewProduct = (props) => {
   }
 
   const handleChangeProductImage = (info) => {
+    // setProductImgList(info.fileList)
     if (info.file.status === 'uploading') {
       setLoadingSlider(true)
       return
@@ -81,13 +140,22 @@ const ModalAddNewProduct = (props) => {
     }
   }
 
-  const handleUploadThumbnail = async ({ file, onSuccess, onError }) => {
-    const response = await handleUploadImage(file)
-    if (response?.data) {
-      setImgThumbnailUploaded(response.data.fileUploaded)
-      onSuccess('ok')
-    } else {
-      onError('Fail to upload')
+  // remove file from the state list
+  const removeFile = (file, type) => {
+    if (type === 'slider') {
+      const result = productImgList.filter((product) => {
+        if (product.uid !== file.uid) {
+          return product
+        }
+      })
+      setProductImgList(result)
+    } else if (type == 'thumbnail') {
+      const result = thumbnail.filter((image) => {
+        if (image.uid !== file.uid) {
+          return image
+        }
+      })
+      setThumbnail(result)
     }
   }
 
@@ -96,43 +164,88 @@ const ModalAddNewProduct = (props) => {
 
     //https://stackoverflow.com/questions/55823296/reactjs-prevstate-in-the-new-usestate-react-hook
     if (response?.data) {
-      setImgProductUploaded((prevState) => [
-        ...prevState,
-        response.data.fileUploaded,
-      ])
+      let object = {}
+      object.uid = uid()
+      object.name = response.data.fileUploaded
+      object.url =
+        import.meta.env.VITE_BACKEND_URL +
+        `/images/book/${response.data.fileUploaded}`
+      object.status = 'done'
+
+      setProductImgList((preState) => [...preState, object])
       onSuccess('ok')
     } else {
       onError('Fail to upload')
     }
   }
 
-  const handlePreviewImage = (file) => {
-    setPreviewOpen(true)
+  const handleUploadThumbnail = async ({ file, onSuccess, onError }) => {
+    const response = await handleUploadImage(file)
+    //https://stackoverflow.com/questions/55823296/reactjs-prevstate-in-the-new-usestate-react-hook
+    if (response?.data) {
+      let object = {}
+      object.uid = uid()
+      object.name = response.data.fileUploaded
+      object.url =
+        import.meta.env.VITE_BACKEND_URL +
+        `/images/book/${response.data.fileUploaded}`
+      object.status = 'done'
 
-    // convert image to base 64
-    getBase64(file.originFileObj, (url) => {
-      setPreviewImage(url)
-    })
+      setThumbnail((preState) => [...preState, object])
+      onSuccess('ok')
+    } else {
+      onError('Fail to upload')
+    }
   }
 
-  // create a new product
-  const createNewProduct = async (productValue) => {
+  const updateProduct = async (productInfo) => {
     setIsSubmit(true)
-    if (productValue) {
-      productValue.slider = imgProductUploaded
-      productValue.thumbnail = imgThumbnailUploaded
+    const productImgNameList = []
+    let thumbnailName = ''
+    if (productImgList && productImgList.length > 0) {
+      productImgList.map((image) => {
+        productImgNameList.push(image.name)
+      })
     }
 
-    const response = await handleCreateNewProduct(productValue)
-    if (response?.data) {
-      message.success('Create a new product successfully!')
-      setIsSubmit(false)
+    if (thumbnail && thumbnail.length > 0) {
+      thumbnail.map((image) => {
+        thumbnailName = image.name
+      })
+    }
 
-      // close modal
-      form.resetFields()
-      props.handleOpenCloseModal()
+    // build data and send to backend
+    productInfo.thumbnail = thumbnailName
+    productInfo.slider = productImgNameList
 
-      props.getSortedProductWithPaginate()
+    // validate for thumbnail and slider
+    if (!productInfo.thumbnail || productInfo.slider.length === 0) {
+      message.error('Missing Input!')
+      return
+    } else {
+      // call api to update product
+      const response = await handleUpdateProduct(productInfo)
+      if (response?.data) {
+        notification.success({
+          message: `OK!`,
+          description: `Update product successfully!`,
+          duration: 1.5,
+        })
+
+        // close the form
+        props.handleOpenEditModal()
+
+        // refrest table
+        props.getSortedProductWithPaginate()
+
+        setIsSubmit(false)
+      } else {
+        notification.error({
+          message: `Error!`,
+          description: `Fail to update the product!`,
+          duration: 1.5,
+        })
+      }
     }
   }
 
@@ -140,15 +253,17 @@ const ModalAddNewProduct = (props) => {
     <>
       <Modal
         width={800}
-        title="Create a new product"
-        open={isOpenModal}
+        title="Update a product"
+        open={isOpenEditModal}
         onOk={() => {
           form.submit()
         }} // when click ok from modal, onFinish is trigger
-        okText="Create product"
+        okText="Update product"
         onCancel={() => {
           form.resetFields()
-          props.handleOpenCloseModal()
+          props.handleOpenEditModal()
+          setThumbnail([])
+          setProductImgList([])
         }}
         confirmLoading={isSubmit}
       >
@@ -158,9 +273,18 @@ const ModalAddNewProduct = (props) => {
           form={form}
           name="basic"
           style={{ maxWidth: '100%' }}
-          onFinish={createNewProduct}
+          onFinish={updateProduct}
           autoComplete="off"
         >
+          <Form.Item
+            wrapperCol={{ span: 24 }}
+            labelCol={{ span: 24 }}
+            label="Id"
+            name="_id"
+            hidden
+          >
+            <Input />
+          </Form.Item>
           <Row gutter={15}>
             <Col span={12}>
               <Form.Item
@@ -175,7 +299,6 @@ const ModalAddNewProduct = (props) => {
                 <Input />
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item
                 wrapperCol={{ span: 24 }}
@@ -189,7 +312,6 @@ const ModalAddNewProduct = (props) => {
                 <Input />
               </Form.Item>
             </Col>
-
             <Col span={6}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -209,7 +331,6 @@ const ModalAddNewProduct = (props) => {
                 />
               </Form.Item>
             </Col>
-
             <Col span={6}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -234,7 +355,6 @@ const ModalAddNewProduct = (props) => {
                 />
               </Form.Item>
             </Col>
-
             <Col span={6}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -245,7 +365,6 @@ const ModalAddNewProduct = (props) => {
                 <InputNumber style={{ width: '100%' }} min={0} />
               </Form.Item>
             </Col>
-
             <Col span={6}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -258,10 +377,9 @@ const ModalAddNewProduct = (props) => {
                   },
                 ]}
               >
-                <InputNumber style={{ width: '100%' }} min={0} />
+                <InputNumber style={{ width: '100%' }} min={0} disabled />
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -269,6 +387,8 @@ const ModalAddNewProduct = (props) => {
                 name="thumbnail"
               >
                 <Upload
+                  onRemove={(file) => removeFile(file, 'thumbnail')}
+                  defaultFileList={thumbnail}
                   onPreview={handlePreviewImage}
                   multiple={false}
                   maxCount={1}
@@ -285,7 +405,6 @@ const ModalAddNewProduct = (props) => {
                 </Upload>
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -293,6 +412,8 @@ const ModalAddNewProduct = (props) => {
                 name="slider"
               >
                 <Upload
+                  onRemove={(file) => removeFile(file, 'slider')}
+                  defaultFileList={productImgList}
                   onPreview={handlePreviewImage}
                   multiple={true}
                   name="slider"
@@ -326,4 +447,4 @@ const ModalAddNewProduct = (props) => {
   )
 }
 
-export default ModalAddNewProduct
+export default ModalUpdateProduct

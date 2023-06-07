@@ -14,12 +14,12 @@ import {
 import { utils, writeFileXLSX } from 'xlsx'
 
 import ModalAddNewProduct from './ModalAddNewProduct'
-import ModalEditUser from './ModalEditUser'
 import {
   handleSearchProductWithPaginate,
   handleSortProductWithPaginate,
 } from '../../../services/productService'
 import ProductViewDetail from './ProductViewDetail'
+import ModalUpdateProduct from './ModalUpdateProduct'
 
 const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -35,7 +35,7 @@ const ProductTable = () => {
   const [viewDetailProduct, setViewDetailProduct] = useState({})
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
-  const [dataUserEdit, setDataUserEdit] = useState({})
+  const [dataProductUpdate, setDataProductUpdate] = useState({})
 
   const columns = [
     {
@@ -89,7 +89,7 @@ const ProductTable = () => {
     {
       title: 'Action',
 
-      render: (userData) => {
+      render: (productData) => {
         return (
           <>
             <Space
@@ -99,7 +99,7 @@ const ProductTable = () => {
             >
               <EditOutlined
                 style={{ color: '#FFCD01', cursor: 'pointer' }}
-                onClick={() => handleOpenEditModal(userData)}
+                onClick={() => handleOpenEditModal(productData)}
               />
               {/* <Popconfirm
                 placement="left"
@@ -213,11 +213,8 @@ const ProductTable = () => {
     }
   }
 
-  const handleOpenEditModal = (userData) => {
-    // fix bug when closing a modal
-    if (isOpenEditModal === false) {
-      setDataUserEdit(userData)
-    }
+  const handleOpenEditModal = (productData) => {
+    setDataProductUpdate(productData)
     setIsOpenEditModal(!isOpenEditModal)
   }
 
@@ -334,14 +331,14 @@ const ProductTable = () => {
       <ModalAddNewProduct
         isOpenModal={isOpenModal}
         handleOpenCloseModal={handleOpenCloseModal}
-        // getUserWithPaginate={getUserWithPaginate}
+        getSortedProductWithPaginate={getSortedProductWithPaginate}
       />
 
-      <ModalEditUser
+      <ModalUpdateProduct
         handleOpenEditModal={handleOpenEditModal}
         isOpenEditModal={isOpenEditModal}
-        dataUserEdit={dataUserEdit}
-        // getUserWithPaginate={getUserWithPaginate}
+        dataProductUpdate={dataProductUpdate}
+        getSortedProductWithPaginate={getSortedProductWithPaginate}
       />
     </>
   )

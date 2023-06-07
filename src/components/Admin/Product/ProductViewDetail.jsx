@@ -17,8 +17,6 @@ const ProductViewDetail = (props) => {
   const [previewTitle, setPreviewTitle] = useState('')
   const [fileList, setFileList] = useState([])
 
-  const handleCancel = () => setPreviewOpen(false)
-
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj)
@@ -69,14 +67,11 @@ const ProductViewDetail = (props) => {
     buildImageList(viewDetailProduct)
   }, [viewDetailProduct])
 
-  const handleOnClose = () => {
-    props.onClose() // Call the onClose function from props
-  }
   return (
     <Drawer
       title="View product detail information"
       placement="right"
-      onClose={handleOnClose}
+      onClose={() => props.onClose()}
       open={openDrawer}
       width="60vw"
     >
@@ -113,7 +108,6 @@ const ProductViewDetail = (props) => {
       </Divider>
 
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
@@ -125,7 +119,7 @@ const ProductViewDetail = (props) => {
         open={previewOpen}
         title={previewTitle}
         footer={null}
-        onCancel={handleCancel}
+        onCancel={() => setPreviewOpen(false)}
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
