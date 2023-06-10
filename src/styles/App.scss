@@ -145,3 +145,13 @@ input {
   -o-animation: rotating 2s linear infinite;
   animation: rotating 2s linear infinite;
 }
+
+.icon-refresh {
+  :hover {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
+  }
+}

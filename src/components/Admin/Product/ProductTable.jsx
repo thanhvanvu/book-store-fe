@@ -3,7 +3,6 @@ import { Popconfirm, Spin, Table, message } from 'antd'
 import { Button, Form, Input, Space } from 'antd'
 import moment from 'moment'
 import './ProductTable.scss'
-import UserViewDetail from './ProductViewDetail'
 import {
   ReloadOutlined,
   ExportOutlined,
