@@ -14,6 +14,19 @@ const handleSortProductWithPaginate = (pagination, query) => {
   return axios(options)
 }
 
+const handleGetProductWithFilter = (pagination, category, sort) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/book?current=${pagination.current}&pageSize=${pagination.pageSize}&category=${category}&sort=${sort}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+
 const handleSearchProductWithPaginate = (pagination, keySearch) => {
   let query = `/api/v1/book?current=${pagination.current}&pageSize=${
     pagination.pageSize
@@ -112,4 +125,5 @@ export {
   handleCreateNewProduct,
   handleUpdateProduct,
   handleDeleteProduct,
+  handleGetProductWithFilter,
 }

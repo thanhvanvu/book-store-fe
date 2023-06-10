@@ -1,5 +1,6 @@
 .homepage-background {
   background-color: #f5f5fa;
+  padding-bottom: 20px;
 
   .homepage-container {
     margin: 0 auto;
@@ -49,12 +50,13 @@
       .right-content-wrapper {
         flex-grow: 1;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-gap: 12px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 15px;
+        align-content: center;
         .product-wrapper {
           cursor: pointer;
           padding: 10px 0;
-          width: 200px;
+          width: 250px;
           min-height: 350px;
           border: 1px solid #e8e8e8;
 
@@ -92,8 +94,64 @@
         }
       }
     }
+  }
+}
 
-    .pagination {
+/* Extra large (xl) screen */
+@media only screen and (min-width: 1200px) {
+  /* CSS styles for extra large screens */
+  /* For example: */
+  .homepage-background {
+    background-color: #f5f5fa;
+
+    .homepage-container {
+      .right-content {
+        .right-content-wrapper {
+          flex-grow: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-gap: 15px;
+          align-content: center;
+        }
+      }
     }
   }
+}
+
+/* Large (lg) screen */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  /* CSS styles for large screens */
+}
+
+/* Medium (md) screen */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  /* CSS styles for medium screens */
+  .homepage-background {
+    background-color: #f5f5fa;
+
+    .homepage-container {
+      .right-content {
+        .right-content-wrapper {
+          flex-grow: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 15px;
+          align-content: center;
+        }
+      }
+    }
+  }
+}
+
+/* Small (sm) screen */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+  /* CSS styles for small screens */
+}
+
+/* Extra small (xs) screen */
+@media only screen and (min-width: 481px) and (max-width: 575px) {
+  /* CSS styles for extra small screens */
+}
+
+@media only screen and (min-width: 375px) and (max-width: 480px) {
 }
