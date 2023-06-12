@@ -117,6 +117,15 @@ const handleDeleteProduct = (productId) => {
 
   return axios(options)
 }
+
+const handleGetProductById = (productId) => {
+  const options = {
+    method: 'get',
+    url: `/api/v1/book/${productId}`,
+  }
+
+  return axios(options)
+}
 export {
   handleSortProductWithPaginate,
   handleSearchProductWithPaginate,
@@ -126,4 +135,5 @@ export {
   handleUpdateProduct,
   handleDeleteProduct,
   handleGetProductWithFilter,
+  handleGetProductById,
 }

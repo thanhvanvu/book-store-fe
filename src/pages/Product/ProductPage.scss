@@ -5,7 +5,7 @@
   .product-detail-wrapper {
     background-color: white;
     padding: 20px 10px !important;
-
+    // min-height: 800px;
     margin: 0 auto;
     display: flex;
     gap: 10px;
@@ -14,16 +14,16 @@
     .product-image-gallery {
       cursor: pointer;
       width: 50%;
+
+      .image-gallery-image {
+        max-width: 400px;
+      }
     }
 
     .product-detail-infomation {
       width: 50%;
 
       .product-seller {
-        span {
-          color: #ffcd00;
-          font-weight: bold;
-        }
       }
 
       .product-title {
@@ -33,6 +33,7 @@
       }
 
       .product-rating {
+        padding: 10px;
         display: flex;
         align-items: center;
         gap: 10px;

@@ -1,5 +1,5 @@
 import { Button, Col, Rate, Row } from 'antd'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ImageGallery from 'react-image-gallery'
 import 'react-image-gallery/styles/scss/image-gallery.scss'
 import './ProductPage.scss'
@@ -10,6 +10,8 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons'
 import ModalGallery from './ModalGallery'
+import { useSearchParams } from 'react-router-dom'
+import { handleGetProductById } from '../../services/productService'
 
 const images = [
   {
@@ -39,10 +41,57 @@ const images = [
 ]
 
 const ProductPage = () => {
+  const [searchParams] = useSearchParams()
+  const [product, setProduct] = useState([])
+  const [imagesGallery, setImagesGallery] = useState([])
   const [isOpenGalleryModal, setIsOpenGalleryModal] = useState(false)
   const [currentImage, setCurrentImage] = useState()
   const [quantity, setQuantity] = useState(1)
   const refGallery = useRef()
+
+  useEffect(() => {
+    getProductInformation()
+  }, [])
+
+  const getProductInformation = async () => {
+    const productId = searchParams.get('id')
+    const response = await handleGetProductById(productId)
+    if (response?.data) {
+      const product = response.data
+      setProduct(product)
+
+      let images = [
+        {
+          original: `${import.meta.env.VITE_BACKEND_URL}/images/book/${
+            product.thumbnail
+          }`,
+          thumbnail: `${import.meta.env.VITE_BACKEND_URL}/images/book/${
+            product.thumbnail
+          }`,
+        },
+      ]
+
+      const slider = product.slider
+
+      if (slider && slider.length > 0) {
+        slider.map((image) => {
+          let object = {}
+          object.original = `${
+            import.meta.env.VITE_BACKEND_URL
+          }/images/book/${image}`
+          object.thumbnail = `${
+            import.meta.env.VITE_BACKEND_URL
+          }/images/book/${image}`
+
+          images.push(object)
+        })
+      }
+
+      console.log(images)
+      setImagesGallery(images)
+    }
+  }
+
   const onClickImage = () => {
     setIsOpenGalleryModal(!isOpenGalleryModal)
     setCurrentImage(refGallery.current.getCurrentIndex())
@@ -50,6 +99,7 @@ const ProductPage = () => {
 
   const date = moment(new Date()).format('MMMM DD')
   const dateDelivery = `${date} - ${new Date().getDate() + 10}`
+  console.log(imagesGallery)
   return (
     <>
       <div className="product-page-background">
@@ -65,25 +115,31 @@ const ProductPage = () => {
           >
             <div className="product-image-gallery">
               <ImageGallery
+                className="gallery"
                 ref={refGallery}
-                items={images}
+                items={imagesGallery}
                 showNav={false}
                 autoPlay={false}
                 showPlayButton={false}
                 slideOnThumbnailOver={true}
                 onClick={onClickImage}
+                showFullscreenButton={false}
               />
             </div>
             <div className="product-detail-infomation">
               <Col className="product-seller">
-                Seller: <span>dasdsa</span>
+                Seller: <span>{product.author ? product.author : ''}</span>
               </Col>
-              <Col className="product-title">How Psychology</Col>
+              <Col className="product-title">
+                {product.mainText ? product.mainText : ''}
+              </Col>
               <Col className="product-rating">
                 <Rate disabled value={5} />
-                <span>Sold: 123</span>
+                <span>Sold {product.sold ? product.sold : ''}</span>
               </Col>
-              <Col className="product-price">$192</Col>
+              <Col className="product-price">
+                ${product.price ? product.price : ''}
+              </Col>
               <Col className="product-delivery">
                 <span style={{ marginRight: 20, color: 'rgb(128, 128, 137)' }}>
                   Delivery
@@ -124,9 +180,10 @@ const ProductPage = () => {
 
         <ModalGallery
           isOpenGalleryModal={isOpenGalleryModal}
-          images={images}
+          images={imagesGallery}
           closeModal={onClickImage}
           currentImage={currentImage}
+          title={product.mainText}
         />
       </div>
     </>

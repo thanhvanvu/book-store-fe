@@ -4,7 +4,7 @@ import 'react-image-gallery/styles/scss/image-gallery.scss'
 import { Col, Divider, Image, Modal, Row } from 'antd'
 import './ProductPage.scss'
 const ModalGallery = (props) => {
-  const { isOpenGalleryModal, images, closeModal, currentImage } = props
+  const { isOpenGalleryModal, images, closeModal, currentImage, title } = props
   const [activeImage, setActiveImage] = useState(0)
   const refGallery = useRef()
 
@@ -35,7 +35,7 @@ const ModalGallery = (props) => {
           />
         </Col>
         <Col span={8}>
-          <div className="product-title">dasdsa</div>
+          <div className="product-title">{title}</div>
           <Row gutter={[20, 20]}>
             {images &&
               images.length > 0 &&
