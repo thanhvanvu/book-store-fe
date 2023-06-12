@@ -1,0 +1,104 @@
+.product-page-background {
+  background-color: #f5f5fa;
+  padding: 20px 0;
+
+  .product-detail-wrapper {
+    background-color: white;
+    padding: 20px 10px !important;
+
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    border-radius: 10px;
+
+    .product-image-gallery {
+      cursor: pointer;
+      width: 50%;
+    }
+
+    .product-detail-infomation {
+      width: 50%;
+
+      .product-seller {
+        span {
+          color: #ffcd00;
+          font-weight: bold;
+        }
+      }
+
+      .product-title {
+        font-size: 20px;
+        line-height: 20px;
+        padding: 10px 0;
+      }
+
+      .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .product-price {
+        font-size: 25px;
+        color: #ff424e;
+        padding: 20px !important;
+        background-color: #fafafa;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .product-delivery {
+        padding: 30px 0;
+      }
+
+      .product-quantity {
+        margin-bottom: 30px;
+        .quantity-right {
+          button {
+            outline: none;
+            cursor: pointer;
+            border: 0;
+            font-size: 0.875rem;
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: 0;
+
+            transition: background-color 0.1s cubic-bezier(0.4, 0, 0.6, 1);
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            border-radius: 2px;
+            background: transparent;
+            color: rgba(0, 0, 0, 0.8);
+            width: 32px;
+            height: 32px;
+
+            &:hover {
+              background-color: #ccc;
+            }
+          }
+
+          input {
+            height: 32px;
+            width: 50px;
+            text-align: center;
+            border: 0;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: text;
+            border-radius: 0;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            outline: none;
+          }
+        }
+      }
+
+      .product-button {
+        display: flex;
+        gap: 20px;
+      }
+    }
+  }
+}
+
+.active {
+  border: 1px solid red;
+}

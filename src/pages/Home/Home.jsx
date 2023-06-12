@@ -162,9 +162,17 @@ const Home = () => {
   return (
     <>
       <div className="homepage-background">
-        <Row gutter={[20, 20]}>
-          <Col className="homepage-container" span={20}>
-            <Col className="left-content" md={4} sm={0}>
+        <Row gutter={[15, 15]}>
+          <Col
+            className="homepage-container"
+            xxl={12}
+            xl={15}
+            lg={18}
+            md={22}
+            sm={22}
+            xs={24}
+          >
+            <Col className="left-content" xl={5} lg={5} md={5} sm={6} xs={0}>
               <div className="filter-header">
                 <span style={{ fontWeight: 'bold' }}>
                   {' '}
@@ -305,8 +313,8 @@ const Home = () => {
               </Form>
             </Col>
 
-            <Col className="right-content" md={20} sm={24}>
-              <Row>
+            <Col className="right-content" xl={19} md={19} sm={0} xs={0}>
+              <Col className="product-content">
                 <Tabs
                   onChange={(activeKey) => {
                     if (activeKey === 'lowToHigh') {
@@ -325,7 +333,7 @@ const Home = () => {
                       label: `Newest Arrivals`,
                       children: (
                         <>
-                          <Row className="right-content-wrapper">
+                          <Col className="right-content-wrapper">
                             {productData &&
                               productData.length > 0 &&
                               productData.map((product, index) => {
@@ -334,7 +342,7 @@ const Home = () => {
                                 }/images/book/${product.thumbnail}`
 
                                 return (
-                                  <div
+                                  <Col
                                     className="product-wrapper"
                                     key={index}
                                     onClick={() => handleRedirectBook(product)}
@@ -358,10 +366,10 @@ const Home = () => {
                                         <span>Fast Shipping in 2H</span>
                                       </div>
                                     </div>
-                                  </div>
+                                  </Col>
                                 )
                               })}
-                          </Row>
+                          </Col>
                         </>
                       ),
                     },
@@ -448,8 +456,174 @@ const Home = () => {
                     },
                   ]}
                 />
-              </Row>
+              </Col>
 
+              <Row className="pagination">
+                <Pagination
+                  defaultCurrent={pagination.page}
+                  pageSize={pagination.pageSize}
+                  total={pagination.total}
+                  onChange={onChangePagination}
+                />
+              </Row>
+            </Col>
+
+            {/* vertical list product */}
+            <Col
+              className="right-content-vertical"
+              xl={0}
+              lg={0}
+              md={0}
+              sm={19}
+              xs={24}
+            >
+              <Col className="product-content">
+                <Tabs
+                  onChange={(activeKey) => {
+                    if (activeKey === 'lowToHigh') {
+                      setSort('price')
+                    } else if (activeKey === 'highToLow') {
+                      setSort('-price')
+                    } else {
+                      setSort('-createdAt')
+                    }
+                  }}
+                  className="tab-header"
+                  defaultActiveKey="newest"
+                  items={[
+                    {
+                      key: 'newest',
+                      label: `Newest Arrivals`,
+                      children: (
+                        <>
+                          {productData &&
+                            productData.length > 0 &&
+                            productData.map((product, index) => {
+                              const thumbnail = `${
+                                import.meta.env.VITE_BACKEND_URL
+                              }/images/book/${product.thumbnail}`
+                              return (
+                                <div
+                                  className="product-content-wrapper"
+                                  key={index}
+                                >
+                                  <div className="product-thumbnail">
+                                    <img src={thumbnail} />
+                                  </div>
+                                  <div className="product-information">
+                                    <div className="product-title">
+                                      {product.mainText}
+                                    </div>
+                                    <div className="product-price">
+                                      ${product.price}
+                                    </div>
+                                    <div>
+                                      FREE delivery{' '}
+                                      <span style={{ fontWeight: 'bold' }}>
+                                        {dateDelivery}
+                                      </span>
+                                    </div>
+                                    <div className="mail-shipping">
+                                      <MailOutlined className="mail-icon" />
+                                      <span>Fast Shipping in 2H</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                        </>
+                      ),
+                    },
+
+                    {
+                      key: 'lowToHigh',
+                      label: `Price: Low to High`,
+                      children: (
+                        <>
+                          {productData &&
+                            productData.length > 0 &&
+                            productData.map((product, index) => {
+                              const thumbnail = `${
+                                import.meta.env.VITE_BACKEND_URL
+                              }/images/book/${product.thumbnail}`
+                              return (
+                                <div
+                                  className="product-content-wrapper"
+                                  key={index}
+                                >
+                                  <div className="product-thumbnail">
+                                    <img src={thumbnail} />
+                                  </div>
+                                  <div className="product-information">
+                                    <div className="product-title">
+                                      {product.mainText}
+                                    </div>
+                                    <div className="product-price">
+                                      ${product.price}
+                                    </div>
+                                    <div>
+                                      FREE delivery{' '}
+                                      <span style={{ fontWeight: 'bold' }}>
+                                        {dateDelivery}
+                                      </span>
+                                    </div>
+                                    <div className="mail-shipping">
+                                      <MailOutlined className="mail-icon" />
+                                      <span>Fast Shipping in 2H</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                        </>
+                      ),
+                    },
+                    {
+                      key: 'highToLow',
+                      label: `Price: High to Low`,
+                      children: (
+                        <>
+                          {productData &&
+                            productData.length > 0 &&
+                            productData.map((product, index) => {
+                              const thumbnail = `${
+                                import.meta.env.VITE_BACKEND_URL
+                              }/images/book/${product.thumbnail}`
+                              return (
+                                <div
+                                  className="product-content-wrapper"
+                                  key={index}
+                                >
+                                  <div className="product-thumbnail">
+                                    <img src={thumbnail} />
+                                  </div>
+                                  <div className="product-information">
+                                    <div className="product-title">
+                                      {product.mainText}
+                                    </div>
+                                    <div className="product-price">
+                                      ${product.price}
+                                    </div>
+                                    <div>
+                                      FREE delivery{' '}
+                                      <span style={{ fontWeight: 'bold' }}>
+                                        {dateDelivery}
+                                      </span>
+                                    </div>
+                                    <div className="mail-shipping">
+                                      <MailOutlined className="mail-icon" />
+                                      <span>Fast Shipping in 2H</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              </Col>
               <Row className="pagination">
                 <Pagination
                   defaultCurrent={pagination.page}

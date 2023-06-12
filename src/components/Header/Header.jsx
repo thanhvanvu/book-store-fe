@@ -69,11 +69,27 @@ const Header = () => {
 
   return (
     <Row className="home-header">
-      <Col className="home-header-container" span={20}>
-        <Col span={2} className="book-store-logo">
+      <Col
+        className="home-header-container"
+        xxl={12}
+        xl={15}
+        lg={18}
+        md={22}
+        sm={22}
+        xs={23}
+      >
+        <Col className="book-store-logo">
           <img src={Logo} alt="" width={75} height={70} />
         </Col>
-        <Col className="search-bar" span={14}>
+        <Col
+          className="search-bar"
+          xxl={12}
+          xl={11}
+          lg={8}
+          md={10}
+          sm={10}
+          xs={10}
+        >
           <Search placeholder="input search text" enterButton size="medium" />
         </Col>
         <Badge count={11} overflowCount={10}>
@@ -98,19 +114,21 @@ const Header = () => {
             </a>
           </Dropdown>
         ) : (
-          <div className="account-login">
+          <Col className="account-login">
             <Link to="/login">
               <CiFaceSmile className="face-icon" />
               <p>Account</p>
             </Link>
-          </div>
+          </Col>
         )}
 
         {/* <Button>Login account</Button> */}
-        <div className="support">
-          <BiSupport className="support-icon" />
-          <p>Support</p>
-        </div>
+        <Col className="support" xxl={3} xl={3} lg={3} md={3} sm={0} xs={0}>
+          <div className="support-wrap">
+            <BiSupport className="support-icon" />
+            <p>Support</p>
+          </div>
+        </Col>
       </Col>
     </Row>
   )

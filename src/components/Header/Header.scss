@@ -1,8 +1,10 @@
 .home-header {
+  padding: 5px 0;
   .home-header-container {
     height: 100%;
     margin: 0 auto;
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     .book-store-logo {
@@ -11,7 +13,6 @@
     }
 
     .search-bar {
-      margin-left: 20px;
       .ant-btn-primary {
         background-color: #f2c50f;
       }
@@ -19,7 +20,7 @@
 
     .cart-icon {
       cursor: pointer;
-      margin-left: 20px;
+
       font-size: 30px;
       color: #cdaa1f;
 
@@ -29,7 +30,6 @@
     }
 
     .account {
-      margin-left: 30px;
       color: rgb(128, 128, 137);
       .ant-dropdown-menu-title-content {
         a {
@@ -39,7 +39,6 @@
     }
 
     .account-login {
-      margin-left: 30px;
       color: rgb(128, 128, 137);
       text-decoration: none;
       cursor: pointer;
@@ -64,22 +63,22 @@
 
     .support {
       cursor: pointer;
-      margin-left: 20px;
-      float: right;
-      display: flex;
-      align-items: center;
 
-      .support-icon {
-        font-size: 30px;
-        color: #cdaa1f;
-      }
-      p {
-        margin-left: 5px;
-        color: rgb(128, 128, 137);
-      }
+      .support-wrap {
+        display: flex;
+        align-items: center;
+        .support-icon {
+          font-size: 30px;
+          color: #cdaa1f;
+        }
+        p {
+          margin-left: 5px;
+          color: rgb(128, 128, 137);
+        }
 
-      &:hover {
-        text-decoration: underline;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

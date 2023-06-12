@@ -38,8 +38,6 @@
       padding-bottom: 20px !important;
       border-radius: 10px;
       background-color: white;
-      display: flex;
-      flex-direction: column;
 
       .tab-header {
         .ant-tabs-nav {
@@ -48,11 +46,11 @@
       }
 
       .right-content-wrapper {
-        flex-grow: 1;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 15px;
         align-content: center;
+
         .product-wrapper {
           cursor: pointer;
           padding: 10px 0;
@@ -84,6 +82,7 @@
               padding: 10px 0;
               border-top: 1px solid #ccc;
               color: rgb(128, 128, 137);
+
               .mail-icon {
                 margin-right: 10px;
                 color: #cdaa1f;
@@ -94,13 +93,56 @@
         }
       }
     }
+
+    .right-content-vertical {
+      .tab-header {
+        .ant-tabs-nav {
+          font-weight: bold;
+        }
+      }
+      .product-content-wrapper {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        background-color: white;
+        border-radius: 10px;
+        .product-thumbnail {
+          img {
+            object-fit: contain;
+            height: 150px;
+            width: 150px;
+          }
+        }
+
+        .product-information {
+          .product-title {
+            font-size: 16px;
+          }
+          .product-price {
+            font-size: 18px;
+            font-weight: 500;
+          }
+          .mail-shipping {
+            line-height: 20px;
+            display: flex;
+            margin-top: 10px;
+            padding: 10px 0;
+            border-top: 1px solid #ccc;
+            color: rgb(128, 128, 137);
+
+            .mail-icon {
+              margin-right: 10px;
+              color: #cdaa1f;
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-/* Extra large (xl) screen */
-@media only screen and (min-width: 1200px) {
-  /* CSS styles for extra large screens */
-  /* For example: */
+@media only screen and (min-width: 1600px) and (max-width: 2199px) {
   .homepage-background {
     background-color: #f5f5fa;
 
@@ -109,7 +151,25 @@
         .right-content-wrapper {
           flex-grow: 1;
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 15px;
+          align-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+  .homepage-background {
+    background-color: #f5f5fa;
+
+    .homepage-container {
+      .right-content {
+        .right-content-wrapper {
+          flex-grow: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           grid-gap: 15px;
           align-content: center;
         }
@@ -121,6 +181,21 @@
 /* Large (lg) screen */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   /* CSS styles for large screens */
+  .homepage-background {
+    background-color: #f5f5fa;
+
+    .homepage-container {
+      .right-content {
+        .right-content-wrapper {
+          flex-grow: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 15px;
+          align-content: center;
+        }
+      }
+    }
+  }
 }
 
 /* Medium (md) screen */
@@ -146,6 +221,21 @@
 /* Small (sm) screen */
 @media only screen and (min-width: 576px) and (max-width: 767px) {
   /* CSS styles for small screens */
+  .homepage-background {
+    background-color: #f5f5fa;
+
+    .homepage-container {
+      .right-content {
+        .right-content-wrapper {
+          flex-grow: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 15px;
+          align-content: center;
+        }
+      }
+    }
+  }
 }
 
 /* Extra small (xs) screen */

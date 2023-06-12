@@ -120,17 +120,18 @@ export default function App() {
   ])
 
   return (
-    <>
-      {/* check if user logged in ? */}
-      {/* If user not log in, allow user go to page /login */}
-      {isLoading === false ||
-      window.location.pathname === '/login' ||
-      window.location.pathname === '/register' ||
-      window.location.pathname === '/' ? (
-        <RouterProvider router={router} />
-      ) : (
-        <HashLoading />
-      )}
-    </>
+    // <>
+    //   {/* check if user logged in ? */}
+    //   {/* If user not log in, allow user go to page /login */}
+    //   {isLoading === false ||
+    //   window.location.pathname === '/login' ||
+    //   window.location.pathname === '/register' ||
+    //   window.location.pathname === '/' ? (
+    //     <RouterProvider router={router} />
+    //   ) : (
+    //     <HashLoading />
+    //   )}
+    // </>
+    <RouterProvider router={router} />
   )
 }
