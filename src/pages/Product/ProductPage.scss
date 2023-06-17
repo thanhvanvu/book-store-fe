@@ -103,3 +103,69 @@
 .active {
   border: 1px solid red;
 }
+
+/* Extra small (xs) screen */
+@media only screen and (min-width: 481px) and (max-width: 575px) {
+  /* CSS styles for extra small screens */
+  .product-page-background {
+    .product-detail-wrapper {
+      display: block;
+
+      .product-image-gallery {
+        width: 100%;
+
+        .image-gallery-image {
+          max-width: 300px;
+          max-height: 300px;
+        }
+      }
+
+      .product-detail-infomation {
+        width: 100%;
+        margin-top: 20px;
+
+        .product-button {
+          display: block;
+          padding: 0 50px !important;
+
+          button {
+            width: 100%;
+            margin-bottom: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 375px) and (max-width: 480px) {
+  .product-page-background {
+    .product-detail-wrapper {
+      display: block;
+
+      .product-image-gallery {
+        width: 100%;
+
+        .image-gallery-image {
+          max-width: 300px;
+          max-height: 300px;
+        }
+      }
+
+      .product-detail-infomation {
+        width: 100%;
+        margin-top: 20px;
+
+        .product-button {
+          display: block;
+          padding: 0 50px !important;
+
+          button {
+            width: 100%;
+            margin-bottom: 20px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -131,7 +131,8 @@ const ModalAddNewProduct = (props) => {
       // close modal
       form.resetFields()
       props.handleOpenCloseModal()
-
+      setImgProductUploaded([])
+      setImgThumbnailUploaded([])
       props.getSortedProductWithPaginate()
     }
   }
@@ -148,6 +149,8 @@ const ModalAddNewProduct = (props) => {
         okText="Create product"
         onCancel={() => {
           form.resetFields()
+          setImgProductUploaded([])
+          setImgThumbnailUploaded([])
           props.handleOpenCloseModal()
         }}
         confirmLoading={isSubmit}

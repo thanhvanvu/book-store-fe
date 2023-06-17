@@ -13,7 +13,7 @@ const ModalGallery = (props) => {
   }, [isOpenGalleryModal, currentImage])
   return (
     <Modal
-      width={'60vw'}
+      width={'70vw'}
       title="IMAGES"
       open={isOpenGalleryModal}
       // onOk={isOpenGalleryModal}

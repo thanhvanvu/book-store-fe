@@ -78,7 +78,12 @@ const Header = () => {
         sm={22}
         xs={23}
       >
-        <Col className="book-store-logo">
+        <Col
+          className="book-store-logo"
+          onClick={() => {
+            navigate('/')
+          }}
+        >
           <img src={Logo} alt="" width={75} height={70} />
         </Col>
         <Col
@@ -86,7 +91,7 @@ const Header = () => {
           xxl={12}
           xl={11}
           lg={8}
-          md={10}
+          md={8}
           sm={10}
           xs={10}
         >
