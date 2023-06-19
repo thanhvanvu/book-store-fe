@@ -38,7 +38,7 @@ const Header = () => {
 
   useEffect(() => {
     countTotalOrders()
-  }, [])
+  }, [products])
 
   const logout = async () => {
     if (window.confirm('Are you sure to logout? ')) {
