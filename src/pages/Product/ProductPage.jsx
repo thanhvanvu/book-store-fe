@@ -1,4 +1,4 @@
-import { Button, Col, Rate, Row } from 'antd'
+import { Button, Col, Input, Rate, Row, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import ImageGallery from 'react-image-gallery'
 import 'react-image-gallery/styles/scss/image-gallery.scss'
@@ -13,14 +13,20 @@ import ModalGallery from './ModalGallery'
 import { useSearchParams } from 'react-router-dom'
 import { handleGetProductById } from '../../services/productService'
 import ProductLoader from './ProductLoader'
+import { useDispatch } from 'react-redux'
+import { doAddToCart } from '../../redux/cart/cartsSlice'
+
+const date = moment(new Date()).format('MMMM DD')
+const dateDelivery = `${date} - ${new Date().getDate() + 10}`
 
 const ProductPage = () => {
+  const dispatch = useDispatch()
   const [searchParams] = useSearchParams()
   const [product, setProduct] = useState([])
   const [imagesGallery, setImagesGallery] = useState([])
   const [isOpenGalleryModal, setIsOpenGalleryModal] = useState(false)
   const [currentImage, setCurrentImage] = useState()
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(0)
   const [isProductLoading, setIsProductLoading] = useState(false)
   const refGallery = useRef()
 
@@ -76,8 +82,58 @@ const ProductPage = () => {
     setCurrentImage(refGallery.current.getCurrentIndex())
   }
 
-  const date = moment(new Date()).format('MMMM DD')
-  const dateDelivery = `${date} - ${new Date().getDate() + 10}`
+  const handleQuantity = (e) => {
+    if (e === 'plus') {
+      const quantityAvailable = product.quantity - product.sold
+
+      if (quantity >= quantityAvailable) {
+        setQuantity(quantityAvailable)
+        message.error('You have reached the maximum order!')
+      } else {
+        setQuantity(quantity + 1)
+      }
+    } else if (e === 'minus') {
+      if (quantity === 1) {
+        return
+      } else {
+        setQuantity(quantity - 1)
+      }
+    } else {
+      // convert input value to number
+      let quantity = parseInt(e.target.value, 10)
+      const quantityAvailable = product.quantity - product.sold
+      if (isNaN(quantity)) {
+        setQuantity(0)
+      } else if (quantity > quantityAvailable) {
+        setQuantity(quantityAvailable)
+        message.error('You have reached the maximum order!')
+      } else {
+        setQuantity(quantity)
+      }
+    }
+  }
+
+  const handleAddToCart = () => {
+    // sample state
+    // carts: [
+    //   {
+    //     quantity: 1,
+    //     _id: 'abc',
+    //     detail: {
+    //       _id: 'abc',
+    //       name: 'product',
+    //     },
+    //   },
+    // ],
+
+    const productInformation = {
+      quantity: quantity,
+      _id: product._id,
+      detail: product,
+    }
+
+    dispatch(doAddToCart(productInformation))
+  }
 
   return (
     <>
@@ -136,16 +192,16 @@ const ProductPage = () => {
                     Quantity
                   </span>
                   <span className="quantity-right">
-                    <button
-                      onClick={() => {
-                        if (quantity === 0) return
-                        setQuantity(quantity - 1)
-                      }}
-                    >
+                    <button onClick={() => handleQuantity('minus')}>
                       <MinusOutlined />
                     </button>
-                    <input value={quantity} disabled min={0} />
-                    <button onClick={() => setQuantity(quantity + 1)}>
+                    <Input
+                      value={quantity}
+                      name="quantity"
+                      min={0}
+                      onChange={(e) => handleQuantity(e)}
+                    />
+                    <button onClick={() => handleQuantity('plus')}>
                       <PlusOutlined />
                     </button>
                   </span>
@@ -153,7 +209,7 @@ const ProductPage = () => {
 
                 <Col className="product-button">
                   <Button type="primary">Buy Now</Button>
-                  <Button type="primary">
+                  <Button type="primary" onClick={handleAddToCart}>
                     <ShoppingCartOutlined />
                     Add to Cart
                   </Button>

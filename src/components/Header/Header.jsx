@@ -1,6 +1,6 @@
 import { Avatar, Badge, Button, Col, Row, notification } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import './Header.scss'
 import Logo from '../../assets/logo/logo-book-store.png'
@@ -18,8 +18,27 @@ const { Search } = Input
 
 const Header = () => {
   const { user, isAuthenticated } = useSelector((state) => state.account)
+  const { products } = useSelector((state) => state.carts)
+  const [totalOrders, setTotalOrders] = useState(0)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const countTotalOrders = () => {
+    let totalOrder = 0
+
+    console.log(products)
+    if (products.length > 0) {
+      products.map((product) => {
+        totalOrder += product.quantity
+      })
+    }
+
+    setTotalOrders(totalOrder)
+  }
+
+  useEffect(() => {
+    countTotalOrders()
+  }, [])
 
   const logout = async () => {
     if (window.confirm('Are you sure to logout? ')) {
@@ -97,7 +116,7 @@ const Header = () => {
         >
           <Search placeholder="input search text" enterButton size="medium" />
         </Col>
-        <Badge count={11} overflowCount={10}>
+        <Badge count={totalOrders} overflowCount={99}>
           <AiOutlineShoppingCart className="cart-icon" />
         </Badge>
 
