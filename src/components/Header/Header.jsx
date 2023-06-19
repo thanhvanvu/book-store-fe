@@ -116,7 +116,12 @@ const Header = () => {
         >
           <Search placeholder="input search text" enterButton size="medium" />
         </Col>
-        <Badge count={totalOrders} overflowCount={99}>
+        <Badge
+          count={totalOrders}
+          overflowCount={99}
+          size="large"
+          offset={[-5, 5]}
+        >
           <AiOutlineShoppingCart className="cart-icon" />
         </Badge>
 
