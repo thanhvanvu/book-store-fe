@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
-
+import CartPopover from './CartPopover'
 const { Search } = Input
 
 const Header = () => {
@@ -26,7 +26,6 @@ const Header = () => {
   const countTotalOrders = () => {
     let totalOrder = 0
 
-    console.log(products)
     if (products.length > 0) {
       products.map((product) => {
         totalOrder += product.quantity
@@ -116,14 +115,17 @@ const Header = () => {
         >
           <Search placeholder="input search text" enterButton size="medium" />
         </Col>
-        <Badge
-          count={totalOrders}
-          overflowCount={99}
-          size="large"
-          offset={[-5, 5]}
-        >
-          <AiOutlineShoppingCart className="cart-icon" />
-        </Badge>
+
+        <CartPopover>
+          <Badge
+            count={totalOrders}
+            overflowCount={99}
+            size="large"
+            offset={[-5, 5]}
+          >
+            <AiOutlineShoppingCart className="cart-icon" />
+          </Badge>
+        </CartPopover>
 
         {isAuthenticated === true ? (
           <Dropdown menu={{ items }} trigger={['click']} className="account">

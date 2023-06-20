@@ -18,7 +18,6 @@ import AdminLayout from './components/Admin/AdminLayout'
 import AdminContent from './pages/AdminPage/AdminContent'
 import UserTable from './components/Admin/User/UserTable'
 import ProductTable from './components/Admin/Product/ProductTable'
-
 import ProductPage from './pages/Product/ProductPage'
 
 export default function App() {

@@ -1,0 +1,29 @@
+.product-cart-detail {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+  cursor: pointer;
+  padding-right: 5px;
+
+  &:hover {
+    background-color: rgb(244, 244, 244);
+    border-radius: 5px;
+  }
+
+  .product-info {
+    display: flex;
+    width: 80%;
+    gap: 10px;
+
+    .product-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 80%;
+    }
+  }
+
+  .product-price {
+  }
+}

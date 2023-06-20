@@ -1,4 +1,14 @@
-import { Col, Row, Form, Checkbox, Divider, Rate, Tabs, Pagination } from 'antd'
+import {
+  Col,
+  Row,
+  Form,
+  Checkbox,
+  Divider,
+  Rate,
+  Tabs,
+  Pagination,
+  Image,
+} from 'antd'
 import { FilterOutlined, MailOutlined, ReloadOutlined } from '@ant-design/icons'
 import './Home.scss'
 import { useEffect, useState } from 'react'
@@ -142,9 +152,10 @@ const Home = () => {
   }, [categoryFilter])
 
   const onChangePagination = (page, size) => {
+    console.log(page, size)
     setPagination({
       ...pagination,
-      page: page,
+      current: page,
       pageSize: size,
     })
   }
@@ -162,7 +173,7 @@ const Home = () => {
   return (
     <>
       <div className="homepage-background">
-        <Row gutter={[15, 15]}>
+        <Row style={{ height: '100%' }}>
           <Col
             className="homepage-container"
             xxl={12}
@@ -333,22 +344,17 @@ const Home = () => {
                       label: `Newest Arrivals`,
                       children: (
                         <>
-                          <Col className="right-content-wrapper">
+                          <Row className="right-content-wrapper">
                             {productData &&
                               productData.length > 0 &&
                               productData.map((product, index) => {
                                 const thumbnail = `${
                                   import.meta.env.VITE_BACKEND_URL
                                 }/images/book/${product.thumbnail}`
-
                                 return (
-                                  <Col
-                                    className="product-wrapper"
-                                    key={index}
-                                    onClick={() => handleRedirectBook(product)}
-                                  >
+                                  <div className="product-wrapper" key={index}>
                                     <div className="product-thumbnail">
-                                      <img src={thumbnail} />
+                                      <Image src={thumbnail} height={200} />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -366,10 +372,10 @@ const Home = () => {
                                         <span>Fast Shipping in 2H</span>
                                       </div>
                                     </div>
-                                  </Col>
+                                  </div>
                                 )
                               })}
-                          </Col>
+                          </Row>
                         </>
                       ),
                     },
@@ -389,7 +395,7 @@ const Home = () => {
                                 return (
                                   <div className="product-wrapper" key={index}>
                                     <div className="product-thumbnail">
-                                      <img src={thumbnail} />
+                                      <Image src={thumbnail} height={200} />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -429,7 +435,7 @@ const Home = () => {
                                 return (
                                   <div className="product-wrapper" key={index}>
                                     <div className="product-thumbnail">
-                                      <img src={thumbnail} />
+                                      <Image src={thumbnail} height={200} />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -458,17 +464,17 @@ const Home = () => {
                 />
               </Col>
 
-              <Row className="pagination">
+              <Col className="pagination">
                 <Pagination
                   defaultCurrent={pagination.page}
                   pageSize={pagination.pageSize}
                   total={pagination.total}
                   onChange={onChangePagination}
                 />
-              </Row>
+              </Col>
             </Col>
 
-            {/* vertical list product */}
+            {/* vertical homepage */}
             <Col
               className="right-content-vertical"
               xl={0}
@@ -508,7 +514,11 @@ const Home = () => {
                                   key={index}
                                 >
                                   <div className="product-thumbnail">
-                                    <img src={thumbnail} />
+                                    <Image
+                                      src={thumbnail}
+                                      width={200}
+                                      height={200}
+                                    />
                                   </div>
                                   <div className="product-information">
                                     <div className="product-title">
@@ -578,6 +588,7 @@ const Home = () => {
                         </>
                       ),
                     },
+
                     {
                       key: 'highToLow',
                       label: `Price: High to Low`,
@@ -595,7 +606,7 @@ const Home = () => {
                                   key={index}
                                 >
                                   <div className="product-thumbnail">
-                                    <img src={thumbnail} />
+                                    <Image src={thumbnail} />
                                   </div>
                                   <div className="product-information">
                                     <div className="product-title">
@@ -624,14 +635,14 @@ const Home = () => {
                   ]}
                 />
               </Col>
-              <Row className="pagination">
+              <Col className="pagination">
                 <Pagination
-                  defaultCurrent={pagination.page}
+                  defaultCurrent={pagination.current}
                   pageSize={pagination.pageSize}
                   total={pagination.total}
                   onChange={onChangePagination}
                 />
-              </Row>
+              </Col>
             </Col>
           </Col>
         </Row>

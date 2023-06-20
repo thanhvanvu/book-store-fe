@@ -40,8 +40,6 @@ export const cartsSlice = createSlice({
           productsArray[productIndex].quantity + product.quantity
         const availableQuantity = product.detail.quantity - product.detail.sold
 
-        console.log(totalQuantityOrder)
-        console.log(availableQuantity)
         if (totalQuantityOrder >= availableQuantity) {
           productsArray[productIndex].quantity = availableQuantity
         } else {

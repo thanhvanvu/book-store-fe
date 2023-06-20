@@ -32,12 +32,13 @@ const ProductPage = () => {
 
   useEffect(() => {
     getProductInformation()
-  }, [])
+  }, [window.location.href])
 
   const getProductInformation = async () => {
     setIsProductLoading(true)
 
     const productId = searchParams.get('id')
+
     const response = await handleGetProductById(productId)
     if (response?.data) {
       const product = response.data
@@ -125,14 +126,20 @@ const ProductPage = () => {
     //     },
     //   },
     // ],
+    const url = window.location.href
+    const startIndex = url.indexOf('/product/') + '/product/'.length
+    const extractedUrl = url.substring(startIndex)
 
     const productInformation = {
       quantity: quantity,
       _id: product._id,
       detail: product,
+      url: extractedUrl,
     }
 
     dispatch(doAddToCart(productInformation))
+
+    message.success('Add product to cart successfully!')
   }
 
   return (
