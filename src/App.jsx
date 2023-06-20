@@ -19,6 +19,7 @@ import AdminContent from './pages/AdminPage/AdminContent'
 import UserTable from './components/Admin/User/UserTable'
 import ProductTable from './components/Admin/Product/ProductTable'
 import ProductPage from './pages/Product/ProductPage'
+import Cart from './pages/Cart/Cart'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -73,6 +74,10 @@ export default function App() {
         {
           path: 'product/:slug',
           element: <ProductPage />,
+        },
+        {
+          path: 'cart',
+          element: <Cart />,
         },
       ],
     },

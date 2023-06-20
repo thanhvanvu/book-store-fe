@@ -40,7 +40,9 @@ const CartPopover = (props) => {
         </>
       )}
       <Col style={{ display: 'flex', justifyContent: 'right' }}>
-        <Button type="primary">Go to cart</Button>
+        <Button type="primary" onClick={() => navigate('/cart')}>
+          Go to cart
+        </Button>
       </Col>
     </Col>
   )
