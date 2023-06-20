@@ -1,7 +1,8 @@
 .product-page-background {
   background-color: #f5f5fa;
   padding: 20px 0;
-
+  flex-grow: 1;
+  overflow-x: hidden;
   .product-detail-wrapper {
     background-color: white;
     padding: 20px 10px !important;

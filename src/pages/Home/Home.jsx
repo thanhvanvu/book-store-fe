@@ -170,6 +170,39 @@ const Home = () => {
     navigate(`/product/${slug}?id=${product._id}`)
   }
 
+  const productContent = () => {
+    return (
+      <>
+        {productData &&
+          productData.length > 0 &&
+          productData.map((product, index) => {
+            const thumbnail = `${
+              import.meta.env.VITE_BACKEND_URL
+            }/images/book/${product.thumbnail}`
+            return (
+              <div className="product-content-wrapper" key={index}>
+                <div className="product-thumbnail">
+                  <Image src={thumbnail} width={200} height={200} />
+                </div>
+                <div className="product-information">
+                  <div className="product-title">{product.mainText}</div>
+                  <div className="product-price">${product.price}</div>
+                  <div>
+                    FREE delivery{' '}
+                    <span style={{ fontWeight: 'bold' }}>{dateDelivery}</span>
+                  </div>
+                  <div className="mail-shipping">
+                    <MailOutlined className="mail-icon" />
+                    <span>Fast Shipping in 2H</span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+      </>
+    )
+  }
+
   return (
     <>
       <div className="homepage-background">
@@ -183,7 +216,7 @@ const Home = () => {
             sm={22}
             xs={24}
           >
-            <Col className="left-content" xl={5} lg={5} md={5} sm={6} xs={0}>
+            <Col className="left-content" xl={5} lg={5} md={5} sm={0} xs={0}>
               <div className="filter-header">
                 <span style={{ fontWeight: 'bold' }}>
                   {' '}
@@ -351,10 +384,19 @@ const Home = () => {
                                 const thumbnail = `${
                                   import.meta.env.VITE_BACKEND_URL
                                 }/images/book/${product.thumbnail}`
+
                                 return (
-                                  <div className="product-wrapper" key={index}>
+                                  <div
+                                    className="product-wrapper"
+                                    key={index}
+                                    onClick={() => handleRedirectBook(product)}
+                                  >
                                     <div className="product-thumbnail">
-                                      <Image src={thumbnail} height={200} />
+                                      <Image
+                                        src={thumbnail}
+                                        height={200}
+                                        preview={false}
+                                      />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -392,10 +434,19 @@ const Home = () => {
                                 const thumbnail = `${
                                   import.meta.env.VITE_BACKEND_URL
                                 }/images/book/${product.thumbnail}`
+
                                 return (
-                                  <div className="product-wrapper" key={index}>
+                                  <div
+                                    className="product-wrapper"
+                                    key={index}
+                                    onClick={() => handleRedirectBook(product)}
+                                  >
                                     <div className="product-thumbnail">
-                                      <Image src={thumbnail} height={200} />
+                                      <Image
+                                        src={thumbnail}
+                                        height={200}
+                                        preview={false}
+                                      />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -432,10 +483,19 @@ const Home = () => {
                                 const thumbnail = `${
                                   import.meta.env.VITE_BACKEND_URL
                                 }/images/book/${product.thumbnail}`
+
                                 return (
-                                  <div className="product-wrapper" key={index}>
+                                  <div
+                                    className="product-wrapper"
+                                    key={index}
+                                    onClick={() => handleRedirectBook(product)}
+                                  >
                                     <div className="product-thumbnail">
-                                      <Image src={thumbnail} height={200} />
+                                      <Image
+                                        src={thumbnail}
+                                        height={200}
+                                        preview={false}
+                                      />
                                     </div>
                                     <div className="product-information">
                                       <div className="title">
@@ -480,8 +540,8 @@ const Home = () => {
               xl={0}
               lg={0}
               md={0}
-              sm={19}
-              xs={24}
+              sm={24}
+              xs={22}
             >
               <Col className="product-content">
                 <Tabs
@@ -512,12 +572,13 @@ const Home = () => {
                                 <div
                                   className="product-content-wrapper"
                                   key={index}
+                                  onClick={() => handleRedirectBook(product)}
                                 >
                                   <div className="product-thumbnail">
                                     <Image
                                       src={thumbnail}
-                                      width={200}
-                                      height={200}
+                                      width={100}
+                                      preview={false}
                                     />
                                   </div>
                                   <div className="product-information">
@@ -560,9 +621,14 @@ const Home = () => {
                                 <div
                                   className="product-content-wrapper"
                                   key={index}
+                                  onClick={() => handleRedirectBook(product)}
                                 >
                                   <div className="product-thumbnail">
-                                    <img src={thumbnail} />
+                                    <Image
+                                      src={thumbnail}
+                                      width={100}
+                                      preview={false}
+                                    />
                                   </div>
                                   <div className="product-information">
                                     <div className="product-title">
@@ -604,9 +670,14 @@ const Home = () => {
                                 <div
                                   className="product-content-wrapper"
                                   key={index}
+                                  onClick={() => handleRedirectBook(product)}
                                 >
                                   <div className="product-thumbnail">
-                                    <Image src={thumbnail} />
+                                    <Image
+                                      src={thumbnail}
+                                      width={100}
+                                      preview={false}
+                                    />
                                   </div>
                                   <div className="product-information">
                                     <div className="product-title">

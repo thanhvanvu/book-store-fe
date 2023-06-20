@@ -149,12 +149,12 @@ const ProductPage = () => {
           <Row gutter={[15, 15]}>
             <Col
               className="product-detail-wrapper"
-              xxl={15}
+              xxl={12}
               xl={15}
               lg={18}
               md={22}
               sm={22}
-              xs={23}
+              xs={24}
             >
               <div className="product-image-gallery">
                 <ImageGallery
