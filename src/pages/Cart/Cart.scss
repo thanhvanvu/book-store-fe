@@ -1,6 +1,8 @@
 .product-cart-background {
   background-color: #f5f5fa;
-  height: 100%;
+  flex-grow: 1;
+  overflow: auto;
+  overflow-x: hidden;
 
   .product-cart-wrapper {
     margin: 20px auto;
@@ -28,6 +30,25 @@
               font-size: 16px;
               font-weight: 600;
             }
+
+            .seller {
+              margin-top: 10px;
+            }
+
+            .quantity {
+              .update-quantity {
+                margin-left: 10px;
+                border-radius: 10px;
+                background-color: #ffcd01;
+                cursor: pointer;
+                border: 1px solid #ffcd01;
+                padding: 0 10px;
+
+                &:hover {
+                  opacity: 0.8;
+                }
+              }
+            }
             .product-quantity {
               width: 100px;
               margin-top: 10px;
@@ -37,6 +58,7 @@
               color: #0087b8;
               cursor: pointer;
               margin-top: 10px;
+              display: inline-block;
 
               &:hover {
                 text-decoration: underline;

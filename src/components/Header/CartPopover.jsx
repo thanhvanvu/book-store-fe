@@ -27,7 +27,7 @@ const CartPopover = (props) => {
               onClick={() => handleRedirectBook(product.url)}
             >
               <div className="product-info">
-                <Image width={45} height={45} src={imageUrl} preview={false} />
+                <Image width={45} src={imageUrl} preview={false} />
                 <p className="product-name">{product.detail.mainText}</p>
               </div>
               <div className="product-price">${product.detail.price}</div>
