@@ -1,9 +1,31 @@
-import { Button, Col, Divider, Empty, Image, InputNumber, Row } from 'antd'
+import {
+  Button,
+  Col,
+  Divider,
+  Empty,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  Radio,
+  Result,
+  Row,
+  Steps,
+} from 'antd'
 
 import './Cart.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { doDeleteToCart, doUpdateToCart } from '../../redux/cart/cartsSlice'
+import { useForm } from 'antd/es/form/Form'
+import { Link, useNavigate } from 'react-router-dom'
+
+const prefixSelector = (
+  <Form.Item name="prefix" noStyle>
+    <span>+1</span>
+  </Form.Item>
+)
+
 const Cart = () => {
   const productsInCart = useSelector((state) => state.carts.products)
   const dispatch = useDispatch()
@@ -14,6 +36,9 @@ const Cart = () => {
     orderTotalAferTax: 0,
   })
   const [showUpdate, setShowUpdate] = useState([])
+  const [currentStep, setCurrentStep] = useState(0)
+  const [form] = Form.useForm()
+  const navigate = useNavigate()
 
   const getTotalPrice = async () => {
     let totalPriceInCart = 0
@@ -84,6 +109,11 @@ const Cart = () => {
   const handleDeleteProduct = (product) => {
     dispatch(doDeleteToCart(product))
   }
+
+  const handlePlaceOrder = (value) => {
+    console.log(value)
+    setCurrentStep(currentStep + 1)
+  }
   return (
     <div className="product-cart-background">
       <Row gutter={[15, 15]}>
@@ -96,135 +126,278 @@ const Cart = () => {
           sm={22}
           xs={24}
         >
-          {products && products.length > 0 ? (
-            <Col xl={16} className="product-detail-left">
-              {products &&
-                products.length > 0 &&
-                products.map((product, index) => {
-                  let maximumQuantity = 0
-                  let thumbnail = ''
+          <Col>
+            <Steps
+              className="step-progress"
+              size="small"
+              current={currentStep}
+              items={[
+                {
+                  title: 'Orders',
+                },
+                {
+                  title: 'Check out',
+                },
+                {
+                  title: 'Finish',
+                },
+              ]}
+            />
+          </Col>
+          {currentStep === 0 || currentStep === 1 ? (
+            <Col className="product-detail-wrapper">
+              {products && products.length > 0 ? (
+                <Col xl={16} className="product-detail-left">
+                  {products &&
+                    products.length > 0 &&
+                    products.map((product, index) => {
+                      let maximumQuantity = 0
+                      let thumbnail = ''
 
-                  if (product?.detail?.thumbnail) {
-                    thumbnail = `${
-                      import.meta.env.VITE_BACKEND_URL
-                    }/images/book/${product.detail.thumbnail}`
-                  }
+                      if (product?.detail?.thumbnail) {
+                        thumbnail = `${
+                          import.meta.env.VITE_BACKEND_URL
+                        }/images/book/${product.detail.thumbnail}`
+                      }
 
-                  if (product?.detail) {
-                    maximumQuantity =
-                      product.detail.quantity - product.detail.sold
-                  }
-                  return (
-                    <div className="product-information" key={index}>
-                      <div className="product-detail-wrap">
-                        <Image width={100} src={thumbnail} />
-                        <div className="product-detail">
-                          <div className="product-name">
-                            {product?.detail?.mainText
-                              ? product.detail.mainText
-                              : ''}
+                      if (product?.detail) {
+                        maximumQuantity =
+                          product.detail.quantity - product.detail.sold
+                      }
+                      return (
+                        <div className="product-information" key={index}>
+                          <div className="product-detail-wrap">
+                            <Image width={100} src={thumbnail} />
+                            <div className="product-detail">
+                              <div className="product-name">
+                                {product?.detail?.mainText
+                                  ? product.detail.mainText
+                                  : ''}
+                              </div>
+
+                              <div className="seller">
+                                {product?.detail?.author
+                                  ? product.detail.author
+                                  : ''}
+                              </div>
+
+                              <div className="quantity">
+                                <InputNumber
+                                  className="product-quantity"
+                                  size="small"
+                                  value={product.quantity}
+                                  min={0}
+                                  max={maximumQuantity}
+                                  onChange={(value) =>
+                                    handleChangeQuantity(value, product, index)
+                                  }
+                                />
+
+                                {showUpdate &&
+                                  showUpdate.length > 0 &&
+                                  showUpdate.map((item, indexUpdateButton) => {
+                                    if (item.index === index) {
+                                      return (
+                                        <span
+                                          className="update-quantity"
+                                          onClick={() =>
+                                            handleUpdateQuantity(index)
+                                          }
+                                          key={indexUpdateButton}
+                                        >
+                                          Update
+                                        </span>
+                                      )
+                                    }
+                                  })}
+                              </div>
+
+                              <span
+                                className="product-delete"
+                                onClick={() => handleDeleteProduct(product)}
+                              >
+                                Delete
+                              </span>
+                            </div>
                           </div>
-
-                          <div className="seller">
-                            {product?.detail?.author
-                              ? product.detail.author
-                              : ''}
+                          <div className="product-price">
+                            $
+                            {product?.detail?.price ? product.detail.price : ''}
                           </div>
-
-                          <div className="quantity">
-                            <InputNumber
-                              className="product-quantity"
-                              size="small"
-                              value={product.quantity}
-                              min={0}
-                              max={maximumQuantity}
-                              onChange={(value) =>
-                                handleChangeQuantity(value, product, index)
-                              }
-                            />
-
-                            {showUpdate &&
-                              showUpdate.length > 0 &&
-                              showUpdate.map((item, indexUpdateButton) => {
-                                if (item.index === index) {
-                                  return (
-                                    <span
-                                      className="update-quantity"
-                                      onClick={() =>
-                                        handleUpdateQuantity(index)
-                                      }
-                                      key={indexUpdateButton}
-                                    >
-                                      Update
-                                    </span>
-                                  )
-                                }
-                              })}
-                          </div>
-
-                          <span
-                            className="product-delete"
-                            onClick={() => handleDeleteProduct(product)}
-                          >
-                            Delete
-                          </span>
                         </div>
-                      </div>
-                      <div className="product-price">
-                        ${product?.detail?.price ? product.detail.price : ''}
-                      </div>
+                      )
+                    })}
+                </Col>
+              ) : (
+                <>
+                  <Col xl={16}>
+                    {' '}
+                    <Empty description="Your Cart is empty." />
+                  </Col>
+                </>
+              )}
+
+              <Col xl={8} className="product-detail-right">
+                {currentStep === 0 && (
+                  <div className="price-calulator">
+                    <div className="order-title">Order Summary</div>
+                    <div className="price-info-text">
+                      <span>item ({products ? products.length : 0})</span>
+                      <span>${orderSummary.orderTotal}</span>
                     </div>
-                  )
-                })}
+
+                    <div className="price-info-text">
+                      <span>Shipping & handling:</span>
+                      <span>$0.00</span>
+                    </div>
+
+                    <Divider
+                      orientation="left"
+                      style={{ color: 'white', margin: 0 }}
+                    >
+                      1111111111111111111111111111
+                    </Divider>
+
+                    <div className="price-info-text">
+                      <span>Total before tax:</span>
+                      <span>${orderSummary.orderTotal}</span>
+                    </div>
+
+                    <div className="price-info-text">
+                      <span>Estimated tax to be collected:</span>
+                      <span>${orderSummary.tax}</span>
+                    </div>
+
+                    <Divider />
+
+                    <div className="price-info-text">
+                      <span className="order-total-text">Order total:</span>
+                      <span className="order-total-text">
+                        ${orderSummary.orderTotalAferTax}
+                      </span>
+                    </div>
+
+                    <div className="place-order">
+                      <Button
+                        type="primary"
+                        onClick={() => setCurrentStep(currentStep + 1)}
+                      >
+                        Place your order
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 1 && (
+                  <div className="user-information">
+                    <Form
+                      form={form}
+                      name="basic"
+                      initialValues={{ remember: true }}
+                      autoComplete="off"
+                      onFinish={handlePlaceOrder}
+                    >
+                      <Form.Item
+                        labelCol={{ span: 24 }}
+                        label="Full name"
+                        name="username"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please input your full name!',
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+
+                      <Form.Item
+                        labelCol={{ span: 24 }}
+                        name="phone"
+                        label="Phone Number"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please input your phone number!',
+                          },
+                        ]}
+                      >
+                        <Input
+                          placeholder="281-485-7845"
+                          addonBefore={prefixSelector}
+                          style={{ width: '100%' }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        labelCol={{ span: 24 }}
+                        label="Address"
+                        name="address"
+                        id="address"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please input your address!',
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Street Address, State, Zipcode" />
+                      </Form.Item>
+
+                      <Form.Item
+                        labelCol={{ span: 24 }}
+                        label="Payment method"
+                        name="payment"
+                      >
+                        <Radio.Group>
+                          <Radio value="payment">
+                            Pay when receive the order
+                          </Radio>
+                        </Radio.Group>
+                      </Form.Item>
+
+                      <Divider></Divider>
+
+                      <div className="price-info-text">
+                        <span className="order-total-text">Order total:</span>
+                        <span className="order-total-text">
+                          ${orderSummary.orderTotalAferTax}
+                        </span>
+                      </div>
+
+                      <div className="place-order">
+                        <Button type="primary" onClick={() => form.submit()}>
+                          Place your order
+                        </Button>
+                        <Button
+                          type="primary"
+                          onClick={() => setCurrentStep(currentStep - 1)}
+                        >
+                          Go back
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                )}
+              </Col>
             </Col>
           ) : (
             <>
-              <Col xl={16}>
-                {' '}
-                <Empty description="Your Cart is empty." />
-              </Col>
+              <Result
+                status="success"
+                title="Successfully Placed order from Bookstore!"
+                subTitle="Order number: 2017182818828182881"
+                extra={[
+                  <Button type="primary" key="console">
+                    Check history
+                  </Button>,
+                  <Button key="homepage" onClick={() => navigate('/')}>
+                    Buy Again
+                  </Button>,
+                ]}
+              />
             </>
           )}
-
-          <Col xl={8} className="product-detail-right">
-            <div className="order-title">Order Summary</div>
-            <div className="price-info-text">
-              <span>item ({products ? products.length : 0})</span>
-              <span>${orderSummary.orderTotal}</span>
-            </div>
-
-            <div className="price-info-text">
-              <span>Shipping & handling:</span>
-              <span>$0.00</span>
-            </div>
-
-            <Divider orientation="left" style={{ color: 'white', margin: 0 }}>
-              1111111111111111111111111111
-            </Divider>
-
-            <div className="price-info-text">
-              <span>Total before tax:</span>
-              <span>${orderSummary.orderTotal}</span>
-            </div>
-
-            <div className="price-info-text">
-              <span>Estimated tax to be collected:</span>
-              <span>${orderSummary.tax}</span>
-            </div>
-
-            <Divider />
-
-            <div className="price-info-text">
-              <span className="order-total-text">Order total:</span>
-              <span className="order-total-text">
-                ${orderSummary.orderTotalAferTax}
-              </span>
-            </div>
-
-            <div className="place-order">
-              <Button type="primary"> Place your order</Button>
-            </div>
-          </Col>
         </Col>
       </Row>
     </div>

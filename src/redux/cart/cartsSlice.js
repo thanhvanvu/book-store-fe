@@ -60,9 +60,6 @@ export const cartsSlice = createSlice({
     },
 
     doDeleteToCart: (state, action) => {
-      console.log(action.payload)
-      console.log(state.products)
-
       let productsUpdate = state.products.filter(
         (product) => product._id !== action.payload._id
       )
