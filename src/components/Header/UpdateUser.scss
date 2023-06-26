@@ -1,0 +1,15 @@
+.update-user-wrapper {
+  display: flex;
+  gap: 10px;
+
+  .avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 20px;
+  }
+
+  .information {
+    flex-grow: 1;
+  }
+}

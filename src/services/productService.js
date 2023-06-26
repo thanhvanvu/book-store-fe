@@ -126,6 +126,20 @@ const handleGetProductById = (productId) => {
 
   return axios(options)
 }
+
+const handleGetOrderHistory = () => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/history`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+
 export {
   handleSortProductWithPaginate,
   handleSearchProductWithPaginate,
@@ -136,4 +150,5 @@ export {
   handleDeleteProduct,
   handleGetProductWithFilter,
   handleGetProductById,
+  handleGetOrderHistory,
 }

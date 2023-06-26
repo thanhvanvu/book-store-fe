@@ -1,7 +1,6 @@
 import { Avatar, Badge, Button, Col, Row, notification } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
-
 import './Header.scss'
 import Logo from '../../assets/logo/logo-book-store.png'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
@@ -14,12 +13,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
 import CartPopover from './CartPopover'
+import UserManagement from './UserManagement'
 const { Search } = Input
 
 const Header = () => {
   const { user, isAuthenticated } = useSelector((state) => state.account)
   const { products } = useSelector((state) => state.carts)
   const [totalOrders, setTotalOrders] = useState(0)
+  const [isOpenUserManagement, setIsOpenUserManagement] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -53,7 +54,31 @@ const Header = () => {
     }
   }
 
+  const openModalUserManagement = () => {
+    setIsOpenUserManagement(!isOpenUserManagement)
+  }
+
   let items = [
+    {
+      label: (
+        <Link
+          to="#"
+          style={{ color: 'rgb(128, 128, 137)' }}
+          onClick={openModalUserManagement}
+        >
+          User Management
+        </Link>
+      ),
+      key: 'user',
+    },
+    {
+      label: (
+        <Link to="/history" style={{ color: 'rgb(128, 128, 137)' }}>
+          Order history
+        </Link>
+      ),
+      key: 'orderHistory',
+    },
     {
       label: (
         <div style={{ color: 'rgb(128, 128, 137)' }} onClick={logout}>
@@ -70,15 +95,6 @@ const Header = () => {
       label: (
         <Link to="/admin" style={{ color: 'rgb(128, 128, 137)' }}>
           Admin Management
-        </Link>
-      ),
-      key: 'admin',
-    })
-  } else {
-    items.unshift({
-      label: (
-        <Link to="#" style={{ color: 'rgb(128, 128, 137)' }}>
-          User Management
         </Link>
       ),
       key: 'admin',
@@ -161,6 +177,11 @@ const Header = () => {
           </div>
         </Col>
       </Col>
+
+      <UserManagement
+        isOpenUserManagement={isOpenUserManagement}
+        openModalUserManagement={openModalUserManagement}
+      />
     </Row>
   )
 }

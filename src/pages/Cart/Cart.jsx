@@ -11,23 +11,30 @@ import {
   Result,
   Row,
   Steps,
+  message,
 } from 'antd'
 
 import './Cart.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { doDeleteToCart, doUpdateToCart } from '../../redux/cart/cartsSlice'
-import { useForm } from 'antd/es/form/Form'
-import { Link, useNavigate } from 'react-router-dom'
+import {
+  doDeleteToCart,
+  doResetCart,
+  doUpdateToCart,
+} from '../../redux/cart/cartsSlice'
+
+import { useNavigate } from 'react-router-dom'
+import { handlePlaceOrder } from '../../services/userService'
 
 const prefixSelector = (
-  <Form.Item name="prefix" noStyle>
+  <Form.Item noStyle>
     <span>+1</span>
   </Form.Item>
 )
 
 const Cart = () => {
   const productsInCart = useSelector((state) => state.carts.products)
+  const user = useSelector((state) => state.account.user)
   const dispatch = useDispatch()
   const [products, setProducts] = useState([])
   const [orderSummary, setOrderSummary] = useState({
@@ -35,6 +42,7 @@ const Cart = () => {
     orderTotal: 0,
     orderTotalAferTax: 0,
   })
+  const [isLoading, setIsLoading] = useState(false)
   const [showUpdate, setShowUpdate] = useState([])
   const [currentStep, setCurrentStep] = useState(0)
   const [form] = Form.useForm()
@@ -110,9 +118,34 @@ const Cart = () => {
     dispatch(doDeleteToCart(product))
   }
 
-  const handlePlaceOrder = (value) => {
-    console.log(value)
-    setCurrentStep(currentStep + 1)
+  const placeOrder = async (value) => {
+    console.log(products)
+
+    setIsLoading(true)
+
+    let productArr = []
+    if (products) {
+      products.map((product) => {
+        let productDetail = {}
+        productDetail._id = product._id
+        productDetail.quantity = product.quantity
+        productDetail.bookName = product.detail.mainText
+
+        productArr.push(productDetail)
+      })
+    }
+
+    let orderApiInput = { ...value }
+
+    orderApiInput.totalPrice = parseInt(orderSummary.orderTotalAferTax)
+    orderApiInput.detail = productArr
+
+    const response = await handlePlaceOrder(orderApiInput)
+    if (response?.data) {
+      dispatch(doResetCart())
+      setIsLoading(false)
+      setCurrentStep(currentStep + 1)
+    }
   }
   return (
     <div className="product-cart-background">
@@ -280,9 +313,15 @@ const Cart = () => {
                     <div className="place-order">
                       <Button
                         type="primary"
-                        onClick={() => setCurrentStep(currentStep + 1)}
+                        onClick={() => {
+                          if (user.id === '') {
+                            navigate('/login')
+                          } else {
+                            setCurrentStep(currentStep + 1)
+                          }
+                        }}
                       >
-                        Place your order
+                        Proceed to checkout
                       </Button>
                     </div>
                   </div>
@@ -295,12 +334,13 @@ const Cart = () => {
                       name="basic"
                       initialValues={{ remember: true }}
                       autoComplete="off"
-                      onFinish={handlePlaceOrder}
+                      onFinish={placeOrder}
                     >
                       <Form.Item
                         labelCol={{ span: 24 }}
                         label="Full name"
-                        name="username"
+                        name="name"
+                        initialValue={user.fullName}
                         rules={[
                           {
                             required: true,
@@ -315,6 +355,7 @@ const Cart = () => {
                         labelCol={{ span: 24 }}
                         name="phone"
                         label="Phone Number"
+                        initialValue={user.phone}
                         rules={[
                           {
                             required: true,
@@ -347,7 +388,12 @@ const Cart = () => {
                       <Form.Item
                         labelCol={{ span: 24 }}
                         label="Payment method"
-                        name="payment"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please select payment method!',
+                          },
+                        ]}
                       >
                         <Radio.Group>
                           <Radio value="payment">
@@ -366,7 +412,11 @@ const Cart = () => {
                       </div>
 
                       <div className="place-order">
-                        <Button type="primary" onClick={() => form.submit()}>
+                        <Button
+                          type="primary"
+                          onClick={() => form.submit()}
+                          loading={isLoading}
+                        >
                           Place your order
                         </Button>
                         <Button

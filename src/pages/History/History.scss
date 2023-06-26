@@ -1,0 +1,19 @@
+.order-history-background {
+  background-color: #f5f5fa;
+  height: 100%;
+  padding: 30px 0;
+  overflow: auto;
+
+  .order-history-wrapper {
+    margin: 0 auto;
+
+    .history-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .order-history-table {
+      margin-top: 30px;
+    }
+  }
+}

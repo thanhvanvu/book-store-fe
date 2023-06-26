@@ -20,6 +20,7 @@ import UserTable from './components/Admin/User/UserTable'
 import ProductTable from './components/Admin/Product/ProductTable'
 import ProductPage from './pages/Product/ProductPage'
 import Cart from './pages/Cart/Cart'
+import History from './pages/History/History'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -78,6 +79,10 @@ export default function App() {
         {
           path: 'cart',
           element: <Cart />,
+        },
+        {
+          path: 'history',
+          element: <History />,
         },
       ],
     },

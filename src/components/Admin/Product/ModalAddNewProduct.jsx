@@ -61,36 +61,7 @@ const ModalAddNewProduct = (props) => {
     fetchCategory()
   }, [])
 
-  const handleChangeThumbnail = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
-    }
-    if (info.file.status === 'done') {
-      setLoading(false)
-    }
-  }
-
-  const handleChangeProductImage = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoadingSlider(true)
-      return
-    }
-    if (info.file.status === 'done') {
-      setLoadingSlider(false)
-    }
-  }
-
-  const handleUploadThumbnail = async ({ file, onSuccess, onError }) => {
-    const response = await handleUploadImage(file)
-    if (response?.data) {
-      setImgThumbnailUploaded(response.data.fileUploaded)
-      onSuccess('ok')
-    } else {
-      onError('Fail to upload')
-    }
-  }
-
+  //#region  Update image product
   const handleUploadProductImage = async ({ file, onSuccess, onError }) => {
     const response = await handleUploadImage(file)
 
@@ -105,6 +76,39 @@ const ModalAddNewProduct = (props) => {
       onError('Fail to upload')
     }
   }
+
+  const handleChangeProductImage = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoadingSlider(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      setLoadingSlider(false)
+    }
+  }
+  //#endregion
+
+  //#region  Upload thumbnail
+  const handleUploadThumbnail = async ({ file, onSuccess, onError }) => {
+    const response = await handleUploadImage(file)
+    if (response?.data) {
+      setImgThumbnailUploaded(response.data.fileUploaded)
+      onSuccess('ok')
+    } else {
+      onError('Fail to upload')
+    }
+  }
+
+  const handleChangeThumbnail = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      setLoading(false)
+    }
+  }
+  //#endregion
 
   const handlePreviewImage = (file) => {
     setPreviewOpen(true)

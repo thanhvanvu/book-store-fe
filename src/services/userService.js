@@ -174,6 +174,40 @@ const handleDeleteUser = (userId) => {
 
   return axios(options)
 }
+
+const handlePlaceOrder = (orderInput) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/order`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: orderInput,
+  }
+
+  return axios(options)
+}
+
+const handleUploadAvatar = (fileImg) => {
+  const bodyFormData = new FormData()
+  bodyFormData.append('fileImg', fileImg)
+
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/file/upload`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+      'upload-type': 'avatar',
+    },
+    data: bodyFormData,
+  }
+
+  return axios(options)
+}
+
 export {
   handleRegister,
   handleLogin,
@@ -187,4 +221,6 @@ export {
   handleCreateBulkUser,
   handleUpdateUser,
   handleDeleteUser,
+  handlePlaceOrder,
+  handleUploadAvatar,
 }
