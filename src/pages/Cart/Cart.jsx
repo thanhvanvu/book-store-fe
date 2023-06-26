@@ -119,8 +119,6 @@ const Cart = () => {
   }
 
   const placeOrder = async (value) => {
-    console.log(products)
-
     setIsLoading(true)
 
     let productArr = []
@@ -395,11 +393,9 @@ const Cart = () => {
                           },
                         ]}
                       >
-                        <Radio.Group>
-                          <Radio value="payment">
-                            Pay when receive the order
-                          </Radio>
-                        </Radio.Group>
+                        <Radio value="payment" checked>
+                          Pay when receive the order
+                        </Radio>
                       </Form.Item>
 
                       <Divider></Divider>
@@ -438,7 +434,11 @@ const Cart = () => {
                 title="Successfully Placed order from Bookstore!"
                 subTitle="Order number: 2017182818828182881"
                 extra={[
-                  <Button type="primary" key="console">
+                  <Button
+                    type="primary"
+                    key="console"
+                    onClick={() => navigate('/history')}
+                  >
                     Check history
                   </Button>,
                   <Button key="homepage" onClick={() => navigate('/')}>

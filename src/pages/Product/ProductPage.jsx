@@ -10,7 +10,7 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons'
 import ModalGallery from './ModalGallery'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { handleGetProductById } from '../../services/productService'
 import ProductLoader from './ProductLoader'
 import { useDispatch } from 'react-redux'
@@ -26,9 +26,10 @@ const ProductPage = () => {
   const [imagesGallery, setImagesGallery] = useState([])
   const [isOpenGalleryModal, setIsOpenGalleryModal] = useState(false)
   const [currentImage, setCurrentImage] = useState()
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const [isProductLoading, setIsProductLoading] = useState(false)
   const refGallery = useRef()
+  const navigate = useNavigate()
 
   useEffect(() => {
     getProductInformation()
@@ -215,7 +216,15 @@ const ProductPage = () => {
                 </Col>
 
                 <Col className="product-button">
-                  <Button type="primary">Buy Now</Button>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      handleAddToCart()
+                      navigate('/cart')
+                    }}
+                  >
+                    Buy Now
+                  </Button>
                   <Button type="primary" onClick={handleAddToCart}>
                     <ShoppingCartOutlined />
                     Add to Cart

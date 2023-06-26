@@ -217,6 +217,20 @@ const handleRefreshToken = () => {
   return axios(options)
 }
 
+const handleChangePassword = (passwordInfo) => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'post',
+    url: `/api/v1/user/change-password`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: passwordInfo,
+  }
+
+  return axios(options)
+}
+
 export {
   handleRegister,
   handleLogin,
@@ -233,4 +247,5 @@ export {
   handlePlaceOrder,
   handleUploadAvatar,
   handleRefreshToken,
+  handleChangePassword,
 }
