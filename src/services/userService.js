@@ -208,6 +208,15 @@ const handleUploadAvatar = (fileImg) => {
   return axios(options)
 }
 
+const handleRefreshToken = () => {
+  const options = {
+    method: 'get',
+    url: `/api/v1/auth/refresh`,
+  }
+
+  return axios(options)
+}
+
 export {
   handleRegister,
   handleLogin,
@@ -223,4 +232,5 @@ export {
   handleDeleteUser,
   handlePlaceOrder,
   handleUploadAvatar,
+  handleRefreshToken,
 }
