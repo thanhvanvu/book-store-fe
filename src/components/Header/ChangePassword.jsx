@@ -6,7 +6,7 @@ import { handleChangePassword } from '../../services/userService'
 const ChangePassword = (props) => {
   const user = useSelector((state) => state.account.user)
   const openModalUserManagement = props.openModalUserManagement
-
+  const [form] = Form.useForm()
   const [isLoading, setIsloading] = useState(false)
 
   const changePassword = async (value) => {
@@ -17,6 +17,9 @@ const ChangePassword = (props) => {
         message.success('Change password successfully!')
         setIsloading(false)
         openModalUserManagement()
+
+        // Reset form
+        form.resetFields()
       } else {
         message.error('Error while trying to change password!')
       }
@@ -26,7 +29,7 @@ const ChangePassword = (props) => {
     <div className="change-password-wrapper">
       <Col>
         <Form
-          name="basic"
+          form={form}
           onFinish={changePassword}
           initialValues={{ remember: true }}
           autoComplete="off"
@@ -36,7 +39,6 @@ const ChangePassword = (props) => {
             label="Email"
             name="email"
             initialValue={user.email}
-            rules={[{ required: true, message: 'Please input your username!' }]}
           >
             <Input disabled />
           </Form.Item>
@@ -71,7 +73,7 @@ const ChangePassword = (props) => {
             name="newpass"
             labelCol={{ span: 24 }}
             label="Confirm new password"
-            dependencies={['password']}
+            dependencies={['newPassword']} // Update the dependencies prop value
             hasFeedback
             rules={[
               {
@@ -84,7 +86,9 @@ const ChangePassword = (props) => {
                     return Promise.resolve()
                   }
                   return Promise.reject(
-                    new Error('The new password that you entered do not match!')
+                    new Error(
+                      'The new password that you entered does not match!'
+                    )
                   )
                 },
               }),
