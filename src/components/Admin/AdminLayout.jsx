@@ -26,6 +26,7 @@ import { doLogoutAction } from '../../redux/account/accountSlice'
 import Footer from '../Footer/Footer'
 import { FiUsers } from 'react-icons/fi'
 import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const { Header, Sider, Content } = Layout
 
@@ -65,9 +66,17 @@ const AdminLayout = () => {
     },
   ]
 
-  let href = window.location.href.split('/')
-  href = href[4]
+  // Retrieve active menu item from local storage on component mount
+  useEffect(() => {
+    const storedActiveMenu = sessionStorage.getItem('activeMenu')
+    if (storedActiveMenu) {
+      setActiveMenu(storedActiveMenu)
+    }
+  }, [])
 
+  useEffect(() => {
+    sessionStorage.setItem('activeMenu', activeMenu)
+  }, [activeMenu])
   return (
     <>
       <Layout className="admin-page-layout">
@@ -76,12 +85,12 @@ const AdminLayout = () => {
           <Menu
             theme="light"
             mode="inline"
-            defaultSelectedKeys={['admin']}
-            selectedKeys={[href]}
+            defaultSelectedKeys={activeMenu}
+            selectedKeys={activeMenu}
             onClick={(e) => setActiveMenu(e.key)}
             items={[
               {
-                key: 'admin',
+                key: 'dashboard',
                 icon: <RxDashboard />,
                 label: <Link to="/admin">Dashboard</Link>,
               },
@@ -167,7 +176,6 @@ const AdminLayout = () => {
               margin: '24px 16px',
               padding: 24,
               minHeight: '100vh',
-              background: colorBgContainer,
             }}
           >
             <Outlet />

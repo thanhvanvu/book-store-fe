@@ -231,6 +231,19 @@ const handleChangePassword = (passwordInfo) => {
   return axios(options)
 }
 
+const handleGetDashboardAdmin = () => {
+  const token = localStorage.getItem('access_token')
+  const options = {
+    method: 'get',
+    url: `/api/v1/database/dashboard`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  return axios(options)
+}
+
 export {
   handleRegister,
   handleLogin,
@@ -248,4 +261,5 @@ export {
   handleUploadAvatar,
   handleRefreshToken,
   handleChangePassword,
+  handleGetDashboardAdmin,
 }

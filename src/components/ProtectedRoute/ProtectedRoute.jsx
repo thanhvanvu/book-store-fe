@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import NotPermitted from './NotPermitted'
@@ -18,19 +18,24 @@ const RoleBaseRoute = (props) => {
 }
 
 const ProtectedRoute = (props) => {
+  const [authenticated, setAuthenticated] = useState('')
   // state redux, account reduder, isAuthenticated: value in reducer
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated)
 
+  useEffect(() => {
+    setAuthenticated(isAuthenticated)
+  }, [isAuthenticated])
+
   return (
     <>
-      {isAuthenticated === true ? (
+      {authenticated === true ? (
         <>
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       ) : (
         <>
           {/* if user is not logged in, redirect user to login page */}
-          <Navigate to="/login" replace />
+          {/* <Navigate to="/login" /> */}
         </>
       )}
     </>

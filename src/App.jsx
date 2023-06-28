@@ -15,12 +15,13 @@ import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import AdminLayout from './components/Admin/AdminLayout'
-import AdminContent from './pages/AdminPage/AdminContent'
+
 import UserTable from './components/Admin/User/UserTable'
 import ProductTable from './components/Admin/Product/ProductTable'
 import ProductPage from './pages/Product/ProductPage'
 import Cart from './pages/Cart/Cart'
 import History from './pages/History/History'
+import Dashboard from './components/Admin/Dashboard/Dashboard'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -100,17 +101,25 @@ export default function App() {
           element: (
             // if user is login, user can go to admin page. If not, redirect to login
             <ProtectedRoute>
-              <AdminContent />
+              <Dashboard />
             </ProtectedRoute>
           ),
         },
         {
           path: 'book',
-          element: <ProductTable />,
+          element: (
+            <ProtectedRoute>
+              <ProductTable />
+            </ProtectedRoute>
+          ),
         },
         {
           path: 'user',
-          element: <UserTable />,
+          element: (
+            <ProtectedRoute>
+              <UserTable />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

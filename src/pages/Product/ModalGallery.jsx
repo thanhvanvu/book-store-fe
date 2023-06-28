@@ -6,14 +6,42 @@ import './ProductPage.scss'
 const ModalGallery = (props) => {
   const { isOpenGalleryModal, images, closeModal, currentImage, title } = props
   const [activeImage, setActiveImage] = useState(0)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [modalWidth, setModalWidth] = useState('')
   const refGallery = useRef()
+
+  // Update the window width state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+  }, [])
+
+  const setVwModal = () => {
+    let width = windowWidth
+    if (width >= 1600) {
+      setModalWidth('30vw')
+    } else if (width >= 700 && width < 1600) {
+      setModalWidth('50vw')
+    } else if (width < 700) {
+      setModalWidth('90vw')
+    }
+  }
+
+  useEffect(() => {
+    setVwModal()
+  }, [windowWidth])
 
   useEffect(() => {
     setActiveImage(currentImage)
   }, [isOpenGalleryModal, currentImage])
+
+  console.log(windowWidth)
   return (
     <Modal
-      width={'35vw'}
+      width={modalWidth}
+      // width="70vw"
       title="IMAGES"
       open={isOpenGalleryModal}
       // onOk={isOpenGalleryModal}
