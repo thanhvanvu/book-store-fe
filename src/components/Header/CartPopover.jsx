@@ -1,16 +1,41 @@
-import { Button, Col, Empty, Image, Popover, Row } from 'antd'
-import React from 'react'
+import { Button, Col, Empty, Image, Popover } from 'antd'
 import './CartPopover.scss'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
 const CartPopover = (props) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [popoverWidth, setPopoverWidth] = useState(0)
+  const [popoverPlacement, setPopoverPlacement] = useState('bottom')
+
   const productsInCart = useSelector((state) => state.carts.products)
   const navigate = useNavigate()
 
-  const handleRedirectBook = (url) => {
-    navigate(`/product/${url}`)
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+  }, [])
+
+  const setVwModal = () => {
+    let width = windowWidth
+    if (width >= 1600) {
+      setPopoverWidth(400)
+    } else if (width >= 600 && width < 1600) {
+      setPopoverWidth(350)
+    } else if (width >= 400 && width < 600) {
+      setPopoverWidth(300)
+    } else if (width < 400) {
+      setPopoverWidth(200)
+      setPopoverPlacement('bottomRight')
+    }
   }
+
+  useEffect(() => {
+    setVwModal()
+  }, [windowWidth])
 
   const content = (
     <Col>
@@ -22,7 +47,7 @@ const CartPopover = (props) => {
           return (
             <div
               className="product-cart-detail"
-              style={{ width: 400 }}
+              style={{ width: popoverWidth }}
               key={index}
               onClick={() => handleRedirectBook(product.url)}
             >
@@ -47,8 +72,16 @@ const CartPopover = (props) => {
     </Col>
   )
 
+  const handleRedirectBook = (url) => {
+    navigate(`/product/${url}`)
+  }
+
   return (
-    <Popover content={content} title="Added products to cart">
+    <Popover
+      content={content}
+      title="Added products to cart"
+      placement={popoverPlacement}
+    >
       <>{props.children}</>
     </Popover>
   )
