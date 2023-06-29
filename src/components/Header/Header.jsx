@@ -14,6 +14,7 @@ import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
 import CartPopover from './CartPopover'
 import UserManagement from './UserManagement'
+import { doResetCart } from '../../redux/cart/cartsSlice'
 const { Search } = Input
 
 const Header = () => {
@@ -45,6 +46,9 @@ const Header = () => {
       let response = await handleLogout()
       if (response?.data) {
         dispatch(doLogoutAction())
+
+        //reset cart
+        dispatch(doResetCart())
         notification.success({
           message: 'Logout sucessfully!',
           duration: 2,

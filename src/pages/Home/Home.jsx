@@ -18,6 +18,8 @@ import {
   handleGetProductWithFilter,
 } from '../../services/productService'
 import { useNavigate } from 'react-router-dom'
+import HomeLoader from './HomeLoader'
+import HomeLoaderVertical from './HomeLoaderVertical'
 
 // convert vietnamese accent
 const nonAccentVietnamese = (str) => {
@@ -74,6 +76,7 @@ const priceRange = [
 
 const Home = () => {
   const [productData, setProductData] = useState([])
+  const [isLoadingHomepage, setIsLoadingHomepage] = useState(false)
   const navigate = useNavigate()
   const [categorySelect, setCategorySelect] = useState()
   const [priceFilter, setPriceFilter] = useState()
@@ -87,12 +90,14 @@ const Home = () => {
   })
 
   const getProduct = async () => {
+    setIsLoadingHomepage(true)
     const response = await handleGetProductWithFilter(
       pagination,
       categoryFilter,
       sort
     )
     if (response?.data) {
+      setIsLoadingHomepage(false)
       const meta = response.data.meta
 
       setPagination({
@@ -168,39 +173,6 @@ const Home = () => {
     const slug = convertSlug(product.mainText)
 
     navigate(`/product/${slug}?id=${product._id}`)
-  }
-
-  const productContent = () => {
-    return (
-      <>
-        {productData &&
-          productData.length > 0 &&
-          productData.map((product, index) => {
-            const thumbnail = `${
-              import.meta.env.VITE_BACKEND_URL
-            }/images/book/${product.thumbnail}`
-            return (
-              <div className="product-content-wrapper" key={index}>
-                <div className="product-thumbnail">
-                  <Image src={thumbnail} width={200} height={200} />
-                </div>
-                <div className="product-information">
-                  <div className="product-title">{product.mainText}</div>
-                  <div className="product-price">${product.price}</div>
-                  <div>
-                    FREE delivery{' '}
-                    <span style={{ fontWeight: 'bold' }}>{dateDelivery}</span>
-                  </div>
-                  <div className="mail-shipping">
-                    <MailOutlined className="mail-icon" />
-                    <span>Fast Shipping in 2H</span>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-      </>
-    )
   }
 
   return (
@@ -377,47 +349,53 @@ const Home = () => {
                       label: `Newest Arrivals`,
                       children: (
                         <>
-                          <Row className="right-content-wrapper">
-                            {productData &&
-                              productData.length > 0 &&
-                              productData.map((product, index) => {
-                                const thumbnail = `${
-                                  import.meta.env.VITE_BACKEND_URL
-                                }/images/book/${product.thumbnail}`
+                          {isLoadingHomepage === false ? (
+                            <Row className="right-content-wrapper">
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
 
-                                return (
-                                  <div
-                                    className="product-wrapper"
-                                    key={index}
-                                    onClick={() => handleRedirectBook(product)}
-                                  >
-                                    <div className="product-thumbnail">
-                                      <Image
-                                        src={thumbnail}
-                                        height={200}
-                                        preview={false}
-                                      />
+                                  return (
+                                    <div
+                                      className="product-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          height={200}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="title">
+                                          {product.mainText}
+                                        </div>
+                                        <div>${product.price}</div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-information">
-                                      <div className="title">
-                                        {product.mainText}
-                                      </div>
-                                      <div>${product.price}</div>
-                                      <div>
-                                        FREE delivery{' '}
-                                        <span style={{ fontWeight: 'bold' }}>
-                                          {dateDelivery}
-                                        </span>
-                                      </div>
-                                      <div className="mail-shipping">
-                                        <MailOutlined className="mail-icon" />
-                                        <span>Fast Shipping in 2H</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                          </Row>
+                                  )
+                                })}
+                            </Row>
+                          ) : (
+                            <HomeLoader />
+                          )}
                         </>
                       ),
                     },
@@ -427,47 +405,53 @@ const Home = () => {
                       label: `Price: Low to High`,
                       children: (
                         <>
-                          <Row className="right-content-wrapper">
-                            {productData &&
-                              productData.length > 0 &&
-                              productData.map((product, index) => {
-                                const thumbnail = `${
-                                  import.meta.env.VITE_BACKEND_URL
-                                }/images/book/${product.thumbnail}`
+                          {isLoadingHomepage === false ? (
+                            <Row className="right-content-wrapper">
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
 
-                                return (
-                                  <div
-                                    className="product-wrapper"
-                                    key={index}
-                                    onClick={() => handleRedirectBook(product)}
-                                  >
-                                    <div className="product-thumbnail">
-                                      <Image
-                                        src={thumbnail}
-                                        height={200}
-                                        preview={false}
-                                      />
+                                  return (
+                                    <div
+                                      className="product-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          height={200}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="title">
+                                          {product.mainText}
+                                        </div>
+                                        <div>${product.price}</div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-information">
-                                      <div className="title">
-                                        {product.mainText}
-                                      </div>
-                                      <div>${product.price}</div>
-                                      <div>
-                                        FREE delivery{' '}
-                                        <span style={{ fontWeight: 'bold' }}>
-                                          {dateDelivery}
-                                        </span>
-                                      </div>
-                                      <div className="mail-shipping">
-                                        <MailOutlined className="mail-icon" />
-                                        <span>Fast Shipping in 2H</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                          </Row>
+                                  )
+                                })}
+                            </Row>
+                          ) : (
+                            <HomeLoader />
+                          )}
                         </>
                       ),
                     },
@@ -476,47 +460,53 @@ const Home = () => {
                       label: `Price: High to Low`,
                       children: (
                         <>
-                          <Row className="right-content-wrapper">
-                            {productData &&
-                              productData.length > 0 &&
-                              productData.map((product, index) => {
-                                const thumbnail = `${
-                                  import.meta.env.VITE_BACKEND_URL
-                                }/images/book/${product.thumbnail}`
+                          {isLoadingHomepage === false ? (
+                            <Row className="right-content-wrapper">
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
 
-                                return (
-                                  <div
-                                    className="product-wrapper"
-                                    key={index}
-                                    onClick={() => handleRedirectBook(product)}
-                                  >
-                                    <div className="product-thumbnail">
-                                      <Image
-                                        src={thumbnail}
-                                        height={200}
-                                        preview={false}
-                                      />
+                                  return (
+                                    <div
+                                      className="product-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          height={200}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="title">
+                                          {product.mainText}
+                                        </div>
+                                        <div>${product.price}</div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-information">
-                                      <div className="title">
-                                        {product.mainText}
-                                      </div>
-                                      <div>${product.price}</div>
-                                      <div>
-                                        FREE delivery{' '}
-                                        <span style={{ fontWeight: 'bold' }}>
-                                          {dateDelivery}
-                                        </span>
-                                      </div>
-                                      <div className="mail-shipping">
-                                        <MailOutlined className="mail-icon" />
-                                        <span>Fast Shipping in 2H</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                          </Row>
+                                  )
+                                })}
+                            </Row>
+                          ) : (
+                            <HomeLoader />
+                          )}
                         </>
                       ),
                     },
@@ -562,46 +552,54 @@ const Home = () => {
                       label: `Newest Arrivals`,
                       children: (
                         <>
-                          {productData &&
-                            productData.length > 0 &&
-                            productData.map((product, index) => {
-                              const thumbnail = `${
-                                import.meta.env.VITE_BACKEND_URL
-                              }/images/book/${product.thumbnail}`
-                              return (
-                                <div
-                                  className="product-content-wrapper"
-                                  key={index}
-                                  onClick={() => handleRedirectBook(product)}
-                                >
-                                  <div className="product-thumbnail">
-                                    <Image
-                                      src={thumbnail}
-                                      width={100}
-                                      preview={false}
-                                    />
-                                  </div>
-                                  <div className="product-information">
-                                    <div className="product-title">
-                                      {product.mainText}
+                          {isLoadingHomepage === false ? (
+                            <div>
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
+                                  return (
+                                    <div
+                                      className="product-content-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          width={100}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="product-title">
+                                          {product.mainText}
+                                        </div>
+                                        <div className="product-price">
+                                          ${product.price}
+                                        </div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-price">
-                                      ${product.price}
-                                    </div>
-                                    <div>
-                                      FREE delivery{' '}
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        {dateDelivery}
-                                      </span>
-                                    </div>
-                                    <div className="mail-shipping">
-                                      <MailOutlined className="mail-icon" />
-                                      <span>Fast Shipping in 2H</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )
-                            })}
+                                  )
+                                })}
+                            </div>
+                          ) : (
+                            <HomeLoaderVertical />
+                          )}
                         </>
                       ),
                     },
@@ -611,46 +609,54 @@ const Home = () => {
                       label: `Price: Low to High`,
                       children: (
                         <>
-                          {productData &&
-                            productData.length > 0 &&
-                            productData.map((product, index) => {
-                              const thumbnail = `${
-                                import.meta.env.VITE_BACKEND_URL
-                              }/images/book/${product.thumbnail}`
-                              return (
-                                <div
-                                  className="product-content-wrapper"
-                                  key={index}
-                                  onClick={() => handleRedirectBook(product)}
-                                >
-                                  <div className="product-thumbnail">
-                                    <Image
-                                      src={thumbnail}
-                                      width={100}
-                                      preview={false}
-                                    />
-                                  </div>
-                                  <div className="product-information">
-                                    <div className="product-title">
-                                      {product.mainText}
+                          {isLoadingHomepage === false ? (
+                            <div>
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
+                                  return (
+                                    <div
+                                      className="product-content-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          width={100}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="product-title">
+                                          {product.mainText}
+                                        </div>
+                                        <div className="product-price">
+                                          ${product.price}
+                                        </div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-price">
-                                      ${product.price}
-                                    </div>
-                                    <div>
-                                      FREE delivery{' '}
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        {dateDelivery}
-                                      </span>
-                                    </div>
-                                    <div className="mail-shipping">
-                                      <MailOutlined className="mail-icon" />
-                                      <span>Fast Shipping in 2H</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )
-                            })}
+                                  )
+                                })}
+                            </div>
+                          ) : (
+                            <HomeLoaderVertical />
+                          )}
                         </>
                       ),
                     },
@@ -660,52 +666,61 @@ const Home = () => {
                       label: `Price: High to Low`,
                       children: (
                         <>
-                          {productData &&
-                            productData.length > 0 &&
-                            productData.map((product, index) => {
-                              const thumbnail = `${
-                                import.meta.env.VITE_BACKEND_URL
-                              }/images/book/${product.thumbnail}`
-                              return (
-                                <div
-                                  className="product-content-wrapper"
-                                  key={index}
-                                  onClick={() => handleRedirectBook(product)}
-                                >
-                                  <div className="product-thumbnail">
-                                    <Image
-                                      src={thumbnail}
-                                      width={100}
-                                      preview={false}
-                                    />
-                                  </div>
-                                  <div className="product-information">
-                                    <div className="product-title">
-                                      {product.mainText}
+                          {isLoadingHomepage === false ? (
+                            <div>
+                              {productData &&
+                                productData.length > 0 &&
+                                productData.map((product, index) => {
+                                  const thumbnail = `${
+                                    import.meta.env.VITE_BACKEND_URL
+                                  }/images/book/${product.thumbnail}`
+                                  return (
+                                    <div
+                                      className="product-content-wrapper"
+                                      key={index}
+                                      onClick={() =>
+                                        handleRedirectBook(product)
+                                      }
+                                    >
+                                      <div className="product-thumbnail">
+                                        <Image
+                                          src={thumbnail}
+                                          width={100}
+                                          preview={false}
+                                        />
+                                      </div>
+                                      <div className="product-information">
+                                        <div className="product-title">
+                                          {product.mainText}
+                                        </div>
+                                        <div className="product-price">
+                                          ${product.price}
+                                        </div>
+                                        <div>
+                                          FREE delivery{' '}
+                                          <span style={{ fontWeight: 'bold' }}>
+                                            {dateDelivery}
+                                          </span>
+                                        </div>
+                                        <div className="mail-shipping">
+                                          <MailOutlined className="mail-icon" />
+                                          <span>Fast Shipping in 2H</span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="product-price">
-                                      ${product.price}
-                                    </div>
-                                    <div>
-                                      FREE delivery{' '}
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        {dateDelivery}
-                                      </span>
-                                    </div>
-                                    <div className="mail-shipping">
-                                      <MailOutlined className="mail-icon" />
-                                      <span>Fast Shipping in 2H</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )
-                            })}
+                                  )
+                                })}
+                            </div>
+                          ) : (
+                            <HomeLoaderVertical />
+                          )}
                         </>
                       ),
                     },
                   ]}
                 />
               </Col>
+
               <Col className="pagination">
                 <Pagination
                   defaultCurrent={pagination.current}

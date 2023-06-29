@@ -150,255 +150,362 @@ const Cart = () => {
       <Row gutter={[15, 15]}>
         <Col
           className="product-cart-wrapper"
-          xxl={12}
-          xl={15}
-          lg={18}
+          xxl={15}
+          xl={18}
+          lg={22}
           md={22}
           sm={22}
-          xs={24}
+          xs={22}
         >
-          <Col>
-            <Steps
-              className="step-progress"
-              size="small"
-              current={currentStep}
-              items={[
-                {
-                  title: 'Orders',
-                },
-                {
-                  title: 'Check out',
-                },
-                {
-                  title: 'Finish',
-                },
-              ]}
-            />
-          </Col>
+          <Steps
+            className="step-progress"
+            size="small"
+            current={currentStep}
+            items={[
+              {
+                title: 'Orders',
+              },
+              {
+                title: 'Check out',
+              },
+              {
+                title: 'Finish',
+              },
+            ]}
+          />
+
           {currentStep === 0 || currentStep === 1 ? (
-            <Col className="product-detail-wrapper">
-              {products && products.length > 0 ? (
-                <Col xl={16} className="product-detail-left">
-                  {products &&
-                    products.length > 0 &&
-                    products.map((product, index) => {
-                      let maximumQuantity = 0
-                      let thumbnail = ''
+            <>
+              <Col className="product-detail-wrapper">
+                {products && products.length > 0 ? (
+                  <>
+                    <Col
+                      xxl={16}
+                      xl={16}
+                      lg={16}
+                      md={16}
+                      sm={24}
+                      xs={24}
+                      className="product-detail-left"
+                    >
+                      {products &&
+                        products.length > 0 &&
+                        products.map((product, index) => {
+                          let maximumQuantity = 0
+                          let thumbnail = ''
 
-                      if (product?.detail?.thumbnail) {
-                        thumbnail = `${
-                          import.meta.env.VITE_BACKEND_URL
-                        }/images/book/${product.detail.thumbnail}`
-                      }
+                          if (product?.detail?.thumbnail) {
+                            thumbnail = `${
+                              import.meta.env.VITE_BACKEND_URL
+                            }/images/book/${product.detail.thumbnail}`
+                          }
 
-                      if (product?.detail) {
-                        maximumQuantity =
-                          product.detail.quantity - product.detail.sold
-                      }
-                      return (
-                        <div className="product-information" key={index}>
-                          <div className="product-detail-wrap">
-                            <Image width={100} src={thumbnail} />
-                            <div className="product-detail">
-                              <div className="product-name">
-                                {product?.detail?.mainText
-                                  ? product.detail.mainText
-                                  : ''}
-                              </div>
-
-                              <div className="seller">
-                                {product?.detail?.author
-                                  ? product.detail.author
-                                  : ''}
-                              </div>
-
-                              <div className="quantity">
-                                <InputNumber
-                                  className="product-quantity"
-                                  size="small"
-                                  value={product.quantity}
-                                  min={0}
-                                  max={maximumQuantity}
-                                  onChange={(value) =>
-                                    handleChangeQuantity(value, product, index)
-                                  }
+                          if (product?.detail) {
+                            maximumQuantity =
+                              product.detail.quantity - product.detail.sold
+                          }
+                          return (
+                            <div className="product-information" key={index}>
+                              <div className="product-detail-wrap">
+                                <Image
+                                  style={{ minWidth: 100, maxWidth: 100 }}
+                                  src={thumbnail}
                                 />
+                                <div className="product-detail">
+                                  <div className="product-name">
+                                    {product?.detail?.mainText
+                                      ? product.detail.mainText
+                                      : ''}
+                                  </div>
 
-                                {showUpdate &&
-                                  showUpdate.length > 0 &&
-                                  showUpdate.map((item, indexUpdateButton) => {
-                                    if (item.index === index) {
-                                      return (
-                                        <span
-                                          className="update-quantity"
-                                          onClick={() =>
-                                            handleUpdateQuantity(index)
+                                  <div className="seller">
+                                    {product?.detail?.author
+                                      ? product.detail.author
+                                      : ''}
+                                  </div>
+
+                                  <div className="quantity">
+                                    <InputNumber
+                                      className="product-quantity"
+                                      size="small"
+                                      value={product.quantity}
+                                      min={0}
+                                      max={maximumQuantity}
+                                      onChange={(value) =>
+                                        handleChangeQuantity(
+                                          value,
+                                          product,
+                                          index
+                                        )
+                                      }
+                                    />
+
+                                    {showUpdate &&
+                                      showUpdate.length > 0 &&
+                                      showUpdate.map(
+                                        (item, indexUpdateButton) => {
+                                          if (item.index === index) {
+                                            return (
+                                              <span
+                                                className="update-quantity"
+                                                onClick={() =>
+                                                  handleUpdateQuantity(index)
+                                                }
+                                                key={indexUpdateButton}
+                                              >
+                                                Update
+                                              </span>
+                                            )
                                           }
-                                          key={indexUpdateButton}
-                                        >
-                                          Update
-                                        </span>
-                                      )
-                                    }
-                                  })}
-                              </div>
+                                        }
+                                      )}
+                                  </div>
 
-                              <span
-                                className="product-delete"
-                                onClick={() => handleDeleteProduct(product)}
-                              >
-                                Delete
-                              </span>
+                                  <span
+                                    className="product-delete"
+                                    onClick={() => handleDeleteProduct(product)}
+                                  >
+                                    Delete
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="product-price">
+                                $
+                                {product?.detail?.price
+                                  ? product.detail.price
+                                  : ''}
+                              </div>
                             </div>
+                          )
+                        })}
+                    </Col>
+                    <Col
+                      xl={8}
+                      lg={8}
+                      md={8}
+                      sm={0}
+                      xs={0}
+                      className="product-detail-right"
+                    >
+                      {currentStep === 0 && (
+                        <div className="price-calulator">
+                          <div className="order-title">Order Summary</div>
+                          <div className="price-info-text">
+                            <span>item ({products ? products.length : 0})</span>
+                            <span>${orderSummary.orderTotal}</span>
                           </div>
-                          <div className="product-price">
-                            $
-                            {product?.detail?.price ? product.detail.price : ''}
+
+                          <div className="price-info-text">
+                            <span>Shipping & handling:</span>
+                            <span>$0.00</span>
+                          </div>
+
+                          <Divider
+                            orientation="left"
+                            style={{ color: 'white', margin: 0 }}
+                          >
+                            1111111111111111111111111111
+                          </Divider>
+
+                          <div className="price-info-text">
+                            <span>Total before tax:</span>
+                            <span>${orderSummary.orderTotal}</span>
+                          </div>
+
+                          <div className="price-info-text">
+                            <span>Estimated tax to be collected:</span>
+                            <span>${orderSummary.tax}</span>
+                          </div>
+
+                          <Divider />
+
+                          <div className="price-info-text">
+                            <span className="order-total-text">
+                              Order total:
+                            </span>
+                            <span className="order-total-text">
+                              ${orderSummary.orderTotalAferTax}
+                            </span>
+                          </div>
+
+                          <div className="place-order">
+                            <Button
+                              type="primary"
+                              onClick={() => {
+                                if (user.id === '') {
+                                  navigate('/login')
+                                } else {
+                                  setCurrentStep(currentStep + 1)
+                                }
+                              }}
+                            >
+                              Proceed to checkout
+                            </Button>
                           </div>
                         </div>
-                      )
-                    })}
-                </Col>
-              ) : (
-                <>
-                  <Col xl={16}>
+                      )}
+
+                      {currentStep === 1 && (
+                        <div className="user-information">
+                          <Form
+                            form={form}
+                            name="basic"
+                            initialValues={{ remember: true }}
+                            autoComplete="off"
+                            onFinish={placeOrder}
+                          >
+                            <Form.Item
+                              labelCol={{ span: 24 }}
+                              label="Full name"
+                              name="name"
+                              initialValue={user.fullName}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Please input your full name!',
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              labelCol={{ span: 24 }}
+                              name="phone"
+                              label="Phone Number"
+                              initialValue={user.phone}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Please input your phone number!',
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="281-485-7845"
+                                addonBefore={prefixSelector}
+                                style={{ width: '100%' }}
+                              />
+                            </Form.Item>
+
+                            <Form.Item
+                              labelCol={{ span: 24 }}
+                              label="Address"
+                              name="address"
+                              id="address"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Please input your address!',
+                                },
+                              ]}
+                            >
+                              <Input placeholder="Street Address, State, Zipcode" />
+                            </Form.Item>
+
+                            <Form.Item
+                              labelCol={{ span: 24 }}
+                              label="Payment method"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Please select payment method!',
+                                },
+                              ]}
+                            >
+                              <Radio value="payment" checked>
+                                Pay when receive the order
+                              </Radio>
+                            </Form.Item>
+
+                            <Divider></Divider>
+
+                            <div className="price-info-text">
+                              <span className="order-total-text">
+                                Order total:
+                              </span>
+                              <span className="order-total-text">
+                                ${orderSummary.orderTotalAferTax}
+                              </span>
+                            </div>
+
+                            <div className="place-order">
+                              <Button
+                                type="primary"
+                                onClick={() => form.submit()}
+                                loading={isLoading}
+                              >
+                                Place your order
+                              </Button>
+                              <Button
+                                type="primary"
+                                onClick={() => setCurrentStep(currentStep - 1)}
+                              >
+                                Go back
+                              </Button>
+                            </div>
+                          </Form>
+                        </div>
+                      )}
+                    </Col>
+                  </>
+                ) : (
+                  <Col
+                    ol
+                    xxl={24}
+                    xl={24}
+                    lg={24}
+                    md={24}
+                    sm={24}
+                    xs={24}
+                    style={{ marginBottom: 30 }}
+                  >
                     {' '}
                     <Empty description="Your Cart is empty." />
                   </Col>
-                </>
-              )}
-
-              <Col xl={8} className="product-detail-right">
-                {currentStep === 0 && (
-                  <div className="price-calulator">
-                    <div className="order-title">Order Summary</div>
-                    <div className="price-info-text">
-                      <span>item ({products ? products.length : 0})</span>
-                      <span>${orderSummary.orderTotal}</span>
-                    </div>
-
-                    <div className="price-info-text">
-                      <span>Shipping & handling:</span>
-                      <span>$0.00</span>
-                    </div>
-
-                    <Divider
-                      orientation="left"
-                      style={{ color: 'white', margin: 0 }}
-                    >
-                      1111111111111111111111111111
-                    </Divider>
-
-                    <div className="price-info-text">
-                      <span>Total before tax:</span>
-                      <span>${orderSummary.orderTotal}</span>
-                    </div>
-
-                    <div className="price-info-text">
-                      <span>Estimated tax to be collected:</span>
-                      <span>${orderSummary.tax}</span>
-                    </div>
-
-                    <Divider />
-
-                    <div className="price-info-text">
-                      <span className="order-total-text">Order total:</span>
-                      <span className="order-total-text">
-                        ${orderSummary.orderTotalAferTax}
-                      </span>
-                    </div>
-
-                    <div className="place-order">
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          if (user.id === '') {
-                            navigate('/login')
-                          } else {
-                            setCurrentStep(currentStep + 1)
-                          }
-                        }}
-                      >
-                        Proceed to checkout
-                      </Button>
-                    </div>
-                  </div>
                 )}
+              </Col>
 
-                {currentStep === 1 && (
-                  <div className="user-information">
-                    <Form
-                      form={form}
-                      name="basic"
-                      initialValues={{ remember: true }}
-                      autoComplete="off"
-                      onFinish={placeOrder}
-                    >
-                      <Form.Item
-                        labelCol={{ span: 24 }}
-                        label="Full name"
-                        name="name"
-                        initialValue={user.fullName}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please input your full name!',
-                          },
-                        ]}
+              {products && products.length > 0 && (
+                <Col
+                  xl={0}
+                  lg={0}
+                  md={0}
+                  sm={24}
+                  xs={24}
+                  className="product-detail-right-vertical"
+                >
+                  {currentStep === 0 && (
+                    <div className="price-calulator">
+                      <div className="order-title">Order Summary</div>
+                      <div className="price-info-text">
+                        <span>item ({products ? products.length : 0})</span>
+                        <span>${orderSummary.orderTotal}</span>
+                      </div>
+
+                      <div className="price-info-text">
+                        <span>Shipping & handling:</span>
+                        <span>$0.00</span>
+                      </div>
+
+                      <Divider
+                        orientation="left"
+                        style={{ color: 'white', margin: 0 }}
                       >
-                        <Input />
-                      </Form.Item>
+                        1111111111111111111111111111
+                      </Divider>
 
-                      <Form.Item
-                        labelCol={{ span: 24 }}
-                        name="phone"
-                        label="Phone Number"
-                        initialValue={user.phone}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please input your phone number!',
-                          },
-                        ]}
-                      >
-                        <Input
-                          placeholder="281-485-7845"
-                          addonBefore={prefixSelector}
-                          style={{ width: '100%' }}
-                        />
-                      </Form.Item>
+                      <div className="price-info-text">
+                        <span>Total before tax:</span>
+                        <span>${orderSummary.orderTotal}</span>
+                      </div>
 
-                      <Form.Item
-                        labelCol={{ span: 24 }}
-                        label="Address"
-                        name="address"
-                        id="address"
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please input your address!',
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Street Address, State, Zipcode" />
-                      </Form.Item>
+                      <div className="price-info-text">
+                        <span>Estimated tax to be collected:</span>
+                        <span>${orderSummary.tax}</span>
+                      </div>
 
-                      <Form.Item
-                        labelCol={{ span: 24 }}
-                        label="Payment method"
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please select payment method!',
-                          },
-                        ]}
-                      >
-                        <Radio value="payment" checked>
-                          Pay when receive the order
-                        </Radio>
-                      </Form.Item>
-
-                      <Divider></Divider>
+                      <Divider />
 
                       <div className="price-info-text">
                         <span className="order-total-text">Order total:</span>
@@ -410,23 +517,123 @@ const Cart = () => {
                       <div className="place-order">
                         <Button
                           type="primary"
-                          onClick={() => form.submit()}
-                          loading={isLoading}
+                          onClick={() => {
+                            if (user.id === '') {
+                              navigate('/login')
+                            } else {
+                              setCurrentStep(currentStep + 1)
+                            }
+                          }}
                         >
-                          Place your order
-                        </Button>
-                        <Button
-                          type="primary"
-                          onClick={() => setCurrentStep(currentStep - 1)}
-                        >
-                          Go back
+                          Proceed to checkout
                         </Button>
                       </div>
-                    </Form>
-                  </div>
-                )}
-              </Col>
-            </Col>
+                    </div>
+                  )}
+
+                  {currentStep === 1 && (
+                    <div className="user-information">
+                      <Form
+                        form={form}
+                        name="basic"
+                        initialValues={{ remember: true }}
+                        autoComplete="off"
+                        onFinish={placeOrder}
+                      >
+                        <Form.Item
+                          labelCol={{ span: 24 }}
+                          label="Full name"
+                          name="name"
+                          initialValue={user.fullName}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please input your full name!',
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                          labelCol={{ span: 24 }}
+                          name="phone"
+                          label="Phone Number"
+                          initialValue={user.phone}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please input your phone number!',
+                            },
+                          ]}
+                        >
+                          <Input
+                            placeholder="281-485-7845"
+                            addonBefore={prefixSelector}
+                            style={{ width: '100%' }}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          labelCol={{ span: 24 }}
+                          label="Address"
+                          name="address"
+                          id="address"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please input your address!',
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Street Address, State, Zipcode" />
+                        </Form.Item>
+
+                        <Form.Item
+                          labelCol={{ span: 24 }}
+                          label="Payment method"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select payment method!',
+                            },
+                          ]}
+                        >
+                          <Radio value="payment" checked>
+                            Pay when receive the order
+                          </Radio>
+                        </Form.Item>
+
+                        <Divider></Divider>
+
+                        <div className="price-info-text">
+                          <span className="order-total-text">Order total:</span>
+                          <span className="order-total-text">
+                            ${orderSummary.orderTotalAferTax}
+                          </span>
+                        </div>
+
+                        <div className="place-order">
+                          <Button
+                            type="primary"
+                            onClick={() => form.submit()}
+                            loading={isLoading}
+                          >
+                            Place your order
+                          </Button>
+                          <Button
+                            type="primary"
+                            onClick={() => setCurrentStep(currentStep - 1)}
+                          >
+                            Go back
+                          </Button>
+                        </div>
+                      </Form>
+                    </div>
+                  )}
+                </Col>
+              )}
+            </>
           ) : (
             <>
               <Result

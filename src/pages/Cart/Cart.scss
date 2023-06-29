@@ -3,9 +3,11 @@
   flex-grow: 1;
   overflow: auto;
   overflow-x: hidden;
+  padding: 0 !important;
 
   .product-cart-wrapper {
     margin: 20px auto;
+    padding: 0 !important;
 
     .step-progress {
       background-color: white;
@@ -17,11 +19,11 @@
     .product-detail-wrapper {
       display: flex;
       gap: 15px;
-      margin-top: 30px;
+      padding: 0 !important;
+      margin-top: 30px !important;
 
       .product-detail-left {
-        height: 100px;
-
+        padding: 0 !important;
         .product-information {
           padding: 20px;
           display: flex;
@@ -141,6 +143,71 @@
               width: 100%;
             }
           }
+        }
+      }
+    }
+  }
+
+  .product-detail-right-vertical {
+    background-color: white;
+
+    padding: 20px !important;
+    flex: 1;
+    border-radius: 10px;
+
+    border: 1px solid #ccc;
+
+    .price-calulator {
+      .order-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .price-info-text {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+
+        .order-total-text {
+          font-size: 18px;
+          color: #b12755;
+          font-weight: bold;
+        }
+      }
+
+      .place-order {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+        margin-top: 20px;
+        button {
+          width: 100%;
+        }
+      }
+    }
+
+    .user-information {
+      .price-info-text {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+
+        .order-total-text {
+          font-size: 18px;
+          color: #b12755;
+          font-weight: bold;
+        }
+      }
+
+      .place-order {
+        width: 100%;
+        justify-content: center;
+        margin-top: 20px;
+
+        button {
+          margin-bottom: 10px;
+          width: 100%;
         }
       }
     }

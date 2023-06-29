@@ -1,0 +1,77 @@
+.right-content-loader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 15px;
+  align-content: center;
+  .product-loader {
+    width: 250px;
+    border: 1px solid #e8e8e8;
+    padding: 10px 0;
+
+    .product-thumbnail-loader {
+      padding: 0 60px;
+      .thumbnail {
+        margin: 0 auto;
+        width: 130px;
+        height: 150px;
+      }
+    }
+
+    .product-information-loader {
+      padding: 0 20px;
+      margin-top: 20px;
+    }
+  }
+}
+
+@media only screen and (min-width: 1600px) and (max-width: 2199px) {
+  .right-content-loader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    align-content: center;
+  }
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+  .right-content-loader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    align-content: center;
+  }
+}
+
+/* Large (lg) screen */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  /* CSS styles for large screens */
+  .right-content-loader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    align-content: center;
+  }
+}
+
+/* Medium (md) screen */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  /* CSS styles for medium screens */
+  .right-content-loader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    align-content: center;
+  }
+}
+
+/* Small (sm) screen */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+}
+
+/* Extra small (xs) screen */
+@media only screen and (min-width: 481px) and (max-width: 575px) {
+  /* CSS styles for extra small screens */
+}
+
+@media only screen and (min-width: 375px) and (max-width: 480px) {
+}

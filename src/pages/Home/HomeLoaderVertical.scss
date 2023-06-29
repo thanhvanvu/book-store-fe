@@ -1,0 +1,24 @@
+.right-content-loader-vertical {
+  width: 100%;
+
+  .product-loader {
+    border: 1px solid #e8e8e8;
+    padding: 10px 0;
+    display: flex;
+    margin-bottom: 20px;
+
+    .product-thumbnail-loader {
+      padding: 0 10px;
+      .thumbnail {
+        margin: 0 auto;
+        width: 100px;
+        height: 120px;
+      }
+    }
+
+    .product-information-loader {
+      width: 70%;
+      padding: 0 20px;
+    }
+  }
+}
