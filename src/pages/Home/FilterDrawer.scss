@@ -1,0 +1,48 @@
+// css for filter drawer
+.filter-drawer {
+  .filter-form-vertical {
+    .feature-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .feature-filter {
+      margin-bottom: 10px;
+      button {
+        padding: 7px;
+        border: none;
+        border-radius: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+
+        &.active {
+          background-color: #fad33a;
+        }
+      }
+    }
+    .category-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .category-select-vertical {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 5px;
+    }
+
+    .price-range-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .price-select-vertical {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 5px;
+    }
+  }
+}

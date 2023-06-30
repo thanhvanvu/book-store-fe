@@ -27,6 +27,7 @@ import HomeLoader from './HomeLoader'
 import HomeLoaderVertical from './HomeLoaderVertical'
 import ProductItem from './ProductItem'
 import ProductItemVertical from './ProductItemVertical'
+import FilterDrawer from './FilterDrawer'
 
 const priceRange = [
   { label: 'Up to $20', value: '20' },
@@ -38,7 +39,7 @@ const priceRange = [
 ]
 
 const Home = () => {
-  const [activeSortButton, setActiveSortButton] = useState('newest')
+  // const [activeSortButton, setActiveSortButton] = useState('newest')
   const [productData, setProductData] = useState([])
   const [isOpenFilter, setIsOpenFilter] = useState(false)
   const [isLoadingHomepage, setIsLoadingHomepage] = useState(false)
@@ -50,7 +51,7 @@ const Home = () => {
   const [pagination, setPagination] = useState({
     pageSize: 9,
     current: 1,
-    total: 0,
+    total: 100,
   })
 
   useEffect(() => {
@@ -123,23 +124,25 @@ const Home = () => {
   const onChangePagination = (page, size) => {
     console.log(page, size)
     setPagination({
-      ...pagination,
       current: page,
       pageSize: size,
     })
   }
 
-  const handleSortButton = (type) => {
-    setActiveSortButton(type)
-    console.log(type)
-    if (type === 'newest') {
-      setSort('-createdAt')
-    } else if (type === 'lowToHigh') {
-      setSort('price')
-    } else if (type === 'highToLow') {
-      setSort('-price')
-    }
+  //#region  function filter for drawer filter
+  const handleFilterDrawer = () => {
+    setIsOpenFilter(!isOpenFilter)
   }
+
+  const handleSortByFilter = (type) => {
+    setSort(type)
+  }
+
+  const handleCategoryFilter = (category) => {
+    console.log(category)
+    setCategoryFilter(category)
+  }
+  //#endregion
 
   return (
     <>
@@ -418,128 +421,16 @@ const Home = () => {
                   onClick={() => setIsOpenFilter(!isOpenFilter)}
                 >
                   Filter{' '}
-                  {isOpenFilter === false ? <UpOutlined /> : <DownOutlined />}
+                  {isOpenFilter === false ? <DownOutlined /> : <UpOutlined />}
                 </span>
 
-                <Drawer
-                  title="Filter"
-                  placement="bottom"
-                  onClose={() => setIsOpenFilter(!isOpenFilter)}
-                  open={isOpenFilter}
-                  className="filter-drawer"
-                >
-                  <Form
-                    form={form}
-                    name="basic"
-                    style={{ maxWidth: '100%' }}
-                    initialValues={{ remember: true }}
-                    autoComplete="off"
-                    className="filter-form-vertical"
-                  >
-                    <div className="feature-header">
-                      <span style={{ fontWeight: 'bold' }}>Sort by</span>
-                    </div>
-
-                    <div className="feature-filter">
-                      <button
-                        className={
-                          activeSortButton === 'newest' ? 'active' : ''
-                        }
-                        onClick={() => handleSortButton('newest')}
-                      >
-                        Newest Arrivals
-                      </button>
-                      <button
-                        className={
-                          activeSortButton === 'lowToHigh' ? 'active' : ''
-                        }
-                        onClick={() => handleSortButton('lowToHigh')}
-                      >
-                        Price: Low To High{' '}
-                      </button>
-                      <button
-                        className={
-                          activeSortButton === 'highToLow' ? 'active' : ''
-                        }
-                        onClick={() => handleSortButton('highToLow')}
-                      >
-                        Price: High To Low
-                      </button>
-                    </div>
-
-                    <div className="category-header">
-                      <span style={{ fontWeight: 'bold' }}>Category</span>
-                      <ReloadOutlined
-                        title="Reset"
-                        className="icon-refresh"
-                        onClick={() => {
-                          setCategoryFilter([])
-                          form.resetFields()
-                          getProduct()
-                        }}
-                        style={{
-                          color: '#CDAA1F',
-                          cursor: 'pointer',
-                        }}
-                      />
-                    </div>
-
-                    <Form.Item labelCol={{ span: 24 }} name="category">
-                      <Checkbox.Group
-                        onChange={(checkedValues) =>
-                          setCategoryFilter(checkedValues)
-                        }
-                        className="category-select-vertical"
-                      >
-                        {categorySelect &&
-                          categorySelect.length > 0 &&
-                          categorySelect.map((item, index) => {
-                            return (
-                              <div key={index}>
-                                <Checkbox value={item.value}>
-                                  {item.label}
-                                </Checkbox>
-                              </div>
-                            )
-                          })}
-                      </Checkbox.Group>
-                    </Form.Item>
-
-                    <Divider></Divider>
-
-                    <div className="price-range-header">
-                      <span style={{ fontWeight: 'bold' }}>Price Range</span>
-                      <ReloadOutlined
-                        className="icon-refresh"
-                        onClick={() => {
-                          setPriceFilter(null)
-                        }}
-                        style={{ color: '#CDAA1F', cursor: 'pointer' }}
-                      />
-                    </div>
-
-                    <Form.Item
-                      labelCol={{ span: 24 }}
-                      className="price-select-vertical"
-                    >
-                      {priceRange &&
-                        priceRange.length > 0 &&
-                        priceRange.map((price, index) => {
-                          return (
-                            <div key={index}>
-                              <Checkbox
-                                value={price.value}
-                                onChange={(e) => setPriceFilter(e.target.value)}
-                                checked={price.value === priceFilter}
-                              >
-                                {price.label}
-                              </Checkbox>
-                            </div>
-                          )
-                        })}
-                    </Form.Item>
-                  </Form>
-                </Drawer>
+                <FilterDrawer
+                  isOpenFilter={isOpenFilter}
+                  handleFilterDrawer={handleFilterDrawer}
+                  handleSortByFilter={handleSortByFilter}
+                  categorySelect={categorySelect}
+                  handleCategoryFilter={handleCategoryFilter}
+                />
               </div>
 
               <Col className="product-content">
