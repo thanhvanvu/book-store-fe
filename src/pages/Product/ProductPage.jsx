@@ -73,9 +73,7 @@ const ProductPage = () => {
       }
 
       setImagesGallery(images)
-      setTimeout(() => {
-        setIsProductLoading(false)
-      }, 1000)
+      setIsProductLoading(false)
     }
   }
 
