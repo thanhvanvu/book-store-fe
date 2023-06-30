@@ -7,65 +7,26 @@ import {
   Rate,
   Tabs,
   Pagination,
-  Image,
+  Button,
+  Drawer,
 } from 'antd'
-import { FilterOutlined, MailOutlined, ReloadOutlined } from '@ant-design/icons'
+import {
+  DownOutlined,
+  FilterOutlined,
+  ReloadOutlined,
+  UpOutlined,
+} from '@ant-design/icons'
 import './Home.scss'
 import { useEffect, useState } from 'react'
-import moment from 'moment'
+
 import {
   handleFetchCategory,
   handleGetProductWithFilter,
 } from '../../services/productService'
-import { useNavigate } from 'react-router-dom'
 import HomeLoader from './HomeLoader'
 import HomeLoaderVertical from './HomeLoaderVertical'
 import ProductItem from './ProductItem'
 import ProductItemVertical from './ProductItemVertical'
-
-// convert vietnamese accent
-const nonAccentVietnamese = (str) => {
-  str = str.replace(/A|Á|À|Ã|Ạ|Â|Ấ|Ầ|Ẫ|Ậ|Ă|Ắ|Ằ|Ẵ|Ặ/g, 'A')
-  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a')
-  str = str.replace(/E|É|È|Ẽ|Ẹ|Ê|Ế|Ề|Ễ|Ệ/, 'E')
-  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e')
-  str = str.replace(/I|Í|Ì|Ĩ|Ị/g, 'I')
-  str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i')
-  str = str.replace(/O|Ó|Ò|Õ|Ọ|Ô|Ố|Ồ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ỡ|Ợ/g, 'O')
-  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o')
-  str = str.replace(/U|Ú|Ù|Ũ|Ụ|Ư|Ứ|Ừ|Ữ|Ự/g, 'U')
-  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u')
-  str = str.replace(/Y|Ý|Ỳ|Ỹ|Ỵ/g, 'Y')
-  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y')
-  str = str.replace(/Đ/g, 'D')
-  str = str.replace(/đ/g, 'd')
-  // Some system encode vietnamese combining accent as individual utf-8 characters
-  str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, '') // Huyền sắc hỏi ngã nặng
-  str = str.replace(/\u02C6|\u0306|\u031B/g, '') // Â, Ê, Ă, Ơ, Ư
-  return str
-}
-
-const convertSlug = (str) => {
-  str = nonAccentVietnamese(str)
-  str = str.replace(/^\s+|\s+$/g, '') // trim
-  str = str.toLowerCase()
-
-  // remove accents, swap ñ for n, etc
-  const from =
-    'ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆĞÍÌÎÏİŇÑÓÖÒÔÕØŘŔŠŞŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇğíìîïıňñóöòôõøðřŕšşťúůüùûýÿžþÞĐđßÆa·/_,:;'
-  const to =
-    'AAAAAACCCDEEEEEEEEGIIIIINNOOOOOORRSSTUUUUUYYZaaaaaacccdeeeeeeeegiiiiinnooooooorrsstuuuuuyyzbBDdBAa------'
-  for (let i = 0, l = from.length; i < l; i++) {
-    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i))
-  }
-
-  str = str
-    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '-') // collapse whitespace and replace by -
-    .replace(/-+/g, '-') // collapse dashes
-
-  return str
-}
 
 const priceRange = [
   { label: 'Up to $20', value: '20' },
@@ -77,9 +38,10 @@ const priceRange = [
 ]
 
 const Home = () => {
+  const [activeSortButton, setActiveSortButton] = useState('newest')
   const [productData, setProductData] = useState([])
+  const [isOpenFilter, setIsOpenFilter] = useState(false)
   const [isLoadingHomepage, setIsLoadingHomepage] = useState(false)
-  const navigate = useNavigate()
   const [categorySelect, setCategorySelect] = useState()
   const [priceFilter, setPriceFilter] = useState()
   const [categoryFilter, setCategoryFilter] = useState([])
@@ -90,6 +52,27 @@ const Home = () => {
     current: 1,
     total: 0,
   })
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const response = await handleFetchCategory()
+      if (response?.data) {
+        let categories = response.data
+        let catergorySelectList = []
+        categories.map((category) => {
+          let object = {}
+          object.value = category
+          object.label = category
+
+          catergorySelectList.push(object)
+        })
+
+        setCategorySelect(catergorySelectList)
+      }
+    }
+
+    fetchCategory()
+  }, [])
 
   const getProduct = async () => {
     setIsLoadingHomepage(true)
@@ -128,35 +111,14 @@ const Home = () => {
     }
   }
 
-  useEffect(() => {
-    getProduct()
-  }, [pagination.current, pagination.current, sort])
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      const response = await handleFetchCategory()
-      if (response?.data) {
-        let categories = response.data
-        let catergorySelectList = []
-        categories.map((category) => {
-          let object = {}
-          object.value = category
-          object.label = category
-
-          catergorySelectList.push(object)
-        })
-
-        setCategorySelect(catergorySelectList)
-      }
-    }
-
-    fetchCategory()
-  }, [])
-
   // filter category
   useEffect(() => {
     categoryFilterAction()
   }, [categoryFilter])
+
+  useEffect(() => {
+    getProduct()
+  }, [pagination.current, pagination.current, sort])
 
   const onChangePagination = (page, size) => {
     console.log(page, size)
@@ -167,14 +129,16 @@ const Home = () => {
     })
   }
 
-  const date = moment(new Date()).format('MMMM DD')
-  const dateDelivery = `${date} - ${new Date().getDate() + 10}`
-
-  const handleRedirectBook = (product) => {
-    // build slug
-    const slug = convertSlug(product.mainText)
-
-    navigate(`/product/${slug}?id=${product._id}`)
+  const handleSortButton = (type) => {
+    setActiveSortButton(type)
+    console.log(type)
+    if (type === 'newest') {
+      setSort('-createdAt')
+    } else if (type === 'lowToHigh') {
+      setSort('price')
+    } else if (type === 'highToLow') {
+      setSort('-price')
+    }
   }
 
   return (
@@ -448,96 +412,150 @@ const Home = () => {
               sm={24}
               xs={22}
             >
+              <div className="filter">
+                <span
+                  className="filter-button"
+                  onClick={() => setIsOpenFilter(!isOpenFilter)}
+                >
+                  Filter{' '}
+                  {isOpenFilter === false ? <UpOutlined /> : <DownOutlined />}
+                </span>
+
+                <Drawer
+                  title="Filter"
+                  placement="bottom"
+                  onClose={() => setIsOpenFilter(!isOpenFilter)}
+                  open={isOpenFilter}
+                  className="filter-drawer"
+                >
+                  <Form
+                    form={form}
+                    name="basic"
+                    style={{ maxWidth: '100%' }}
+                    initialValues={{ remember: true }}
+                    autoComplete="off"
+                    className="filter-form-vertical"
+                  >
+                    <div className="feature-header">
+                      <span style={{ fontWeight: 'bold' }}>Sort by</span>
+                    </div>
+
+                    <div className="feature-filter">
+                      <button
+                        className={
+                          activeSortButton === 'newest' ? 'active' : ''
+                        }
+                        onClick={() => handleSortButton('newest')}
+                      >
+                        Newest Arrivals
+                      </button>
+                      <button
+                        className={
+                          activeSortButton === 'lowToHigh' ? 'active' : ''
+                        }
+                        onClick={() => handleSortButton('lowToHigh')}
+                      >
+                        Price: Low To High{' '}
+                      </button>
+                      <button
+                        className={
+                          activeSortButton === 'highToLow' ? 'active' : ''
+                        }
+                        onClick={() => handleSortButton('highToLow')}
+                      >
+                        Price: High To Low
+                      </button>
+                    </div>
+
+                    <div className="category-header">
+                      <span style={{ fontWeight: 'bold' }}>Category</span>
+                      <ReloadOutlined
+                        title="Reset"
+                        className="icon-refresh"
+                        onClick={() => {
+                          setCategoryFilter([])
+                          form.resetFields()
+                          getProduct()
+                        }}
+                        style={{
+                          color: '#CDAA1F',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </div>
+
+                    <Form.Item labelCol={{ span: 24 }} name="category">
+                      <Checkbox.Group
+                        onChange={(checkedValues) =>
+                          setCategoryFilter(checkedValues)
+                        }
+                        className="category-select-vertical"
+                      >
+                        {categorySelect &&
+                          categorySelect.length > 0 &&
+                          categorySelect.map((item, index) => {
+                            return (
+                              <div key={index}>
+                                <Checkbox value={item.value}>
+                                  {item.label}
+                                </Checkbox>
+                              </div>
+                            )
+                          })}
+                      </Checkbox.Group>
+                    </Form.Item>
+
+                    <Divider></Divider>
+
+                    <div className="price-range-header">
+                      <span style={{ fontWeight: 'bold' }}>Price Range</span>
+                      <ReloadOutlined
+                        className="icon-refresh"
+                        onClick={() => {
+                          setPriceFilter(null)
+                        }}
+                        style={{ color: '#CDAA1F', cursor: 'pointer' }}
+                      />
+                    </div>
+
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      className="price-select-vertical"
+                    >
+                      {priceRange &&
+                        priceRange.length > 0 &&
+                        priceRange.map((price, index) => {
+                          return (
+                            <div key={index}>
+                              <Checkbox
+                                value={price.value}
+                                onChange={(e) => setPriceFilter(e.target.value)}
+                                checked={price.value === priceFilter}
+                              >
+                                {price.label}
+                              </Checkbox>
+                            </div>
+                          )
+                        })}
+                    </Form.Item>
+                  </Form>
+                </Drawer>
+              </div>
+
               <Col className="product-content">
-                <Tabs
-                  onChange={(activeKey) => {
-                    if (activeKey === 'lowToHigh') {
-                      setSort('price')
-                    } else if (activeKey === 'highToLow') {
-                      setSort('-price')
-                    } else {
-                      setSort('-createdAt')
-                    }
-                  }}
-                  className="tab-header"
-                  defaultActiveKey="newest"
-                  items={[
-                    {
-                      key: 'newest',
-                      label: `Newest Arrivals`,
-                      children: (
-                        <>
-                          {isLoadingHomepage === false ? (
-                            <div>
-                              {productData &&
-                                productData.length > 0 &&
-                                productData.map((product, index) => {
-                                  return (
-                                    <ProductItemVertical
-                                      key={index}
-                                      product={product}
-                                    />
-                                  )
-                                })}
-                            </div>
-                          ) : (
-                            <HomeLoaderVertical />
-                          )}
-                        </>
-                      ),
-                    },
-
-                    {
-                      key: 'lowToHigh',
-                      label: `Price: Low to High`,
-                      children: (
-                        <>
-                          {isLoadingHomepage === false ? (
-                            <div>
-                              {productData &&
-                                productData.length > 0 &&
-                                productData.map((product, index) => {
-                                  return (
-                                    <ProductItemVertical
-                                      key={index}
-                                      product={product}
-                                    />
-                                  )
-                                })}
-                            </div>
-                          ) : (
-                            <HomeLoaderVertical />
-                          )}
-                        </>
-                      ),
-                    },
-
-                    {
-                      key: 'highToLow',
-                      label: `Price: High to Low`,
-                      children: (
-                        <>
-                          {isLoadingHomepage === false ? (
-                            <div>
-                              {productData &&
-                                productData.length > 0 &&
-                                productData.map((product, index) => {
-                                  return (
-                                    <ProductItemVertical
-                                      key={index}
-                                      product={product}
-                                    />
-                                  )
-                                })}
-                            </div>
-                          ) : (
-                            <HomeLoaderVertical />
-                          )}
-                        </>
-                      ),
-                    },
-                  ]}
-                />
+                {isLoadingHomepage === false ? (
+                  <div>
+                    {productData &&
+                      productData.length > 0 &&
+                      productData.map((product, index) => {
+                        return (
+                          <ProductItemVertical key={index} product={product} />
+                        )
+                      })}
+                  </div>
+                ) : (
+                  <HomeLoaderVertical />
+                )}
               </Col>
 
               <Col className="pagination">
