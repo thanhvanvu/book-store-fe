@@ -14,11 +14,11 @@ const handleSortProductWithPaginate = (pagination, query) => {
   return axios(options)
 }
 
-const handleGetProductWithFilter = (pagination, category, sort) => {
+const handleGetProductWithFilter = (pagination, category, sort, searchBook) => {
   const token = localStorage.getItem('access_token')
   const options = {
     method: 'get',
-    url: `/api/v1/book?current=${pagination.current}&pageSize=${pagination.pageSize}&category=${category}&sort=${sort}`,
+    url: `/api/v1/book?current=${pagination.current}&pageSize=${pagination.pageSize}&category=${category}&sort=${sort}&mainText=/${searchBook}/i`,
     headers: {
       Authorization: `Bearer ${token}`,
     },

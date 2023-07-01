@@ -28,6 +28,7 @@ import HomeLoaderVertical from './HomeLoaderVertical'
 import ProductItem from './ProductItem'
 import ProductItemVertical from './ProductItemVertical'
 import FilterDrawer from './FilterDrawer'
+import { useOutletContext } from 'react-router-dom'
 
 const priceRange = [
   { label: 'Up to $20', value: '20' },
@@ -39,7 +40,7 @@ const priceRange = [
 ]
 
 const Home = () => {
-  // const [activeSortButton, setActiveSortButton] = useState('newest')
+  const [searchBook, setSearchBook] = useOutletContext()
   const [productData, setProductData] = useState([])
   const [isOpenFilter, setIsOpenFilter] = useState(false)
   const [isLoadingHomepage, setIsLoadingHomepage] = useState(false)
@@ -54,6 +55,7 @@ const Home = () => {
     total: 100,
   })
 
+  // fetch category
   useEffect(() => {
     const fetchCategory = async () => {
       const response = await handleFetchCategory()
@@ -75,12 +77,14 @@ const Home = () => {
     fetchCategory()
   }, [])
 
+  // function to get product from backend
   const getProduct = async () => {
     setIsLoadingHomepage(true)
     const response = await handleGetProductWithFilter(
       pagination,
       categoryFilter,
-      sort
+      sort,
+      searchBook
     )
     if (response?.data) {
       setIsLoadingHomepage(false)
@@ -94,6 +98,10 @@ const Home = () => {
       setProductData(response.data.result)
     }
   }
+
+  useEffect(() => {
+    getProduct()
+  }, [pagination.current, pagination.current, sort, searchBook])
 
   const categoryFilterAction = async () => {
     if (categoryFilter && categoryFilter.length === 0) {
@@ -111,15 +119,10 @@ const Home = () => {
       }
     }
   }
-
   // filter category
   useEffect(() => {
     categoryFilterAction()
   }, [categoryFilter])
-
-  useEffect(() => {
-    getProduct()
-  }, [pagination.current, pagination.current, sort])
 
   const onChangePagination = (page, size) => {
     console.log(page, size)

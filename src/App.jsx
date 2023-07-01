@@ -22,6 +22,7 @@ import ProductPage from './pages/Product/ProductPage'
 import Cart from './pages/Cart/Cart'
 import History from './pages/History/History'
 import Dashboard from './components/Admin/Dashboard/Dashboard'
+import { useState } from 'react'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -50,10 +51,11 @@ export default function App() {
   //#endregion
 
   const Layout = () => {
+    const [searchBook, setSearchBook] = useState('')
     return (
       <div className="layout-app">
-        <Header />
-        <Outlet />
+        <Header searchBook={searchBook} setSearchBook={setSearchBook} />
+        <Outlet context={[searchBook, setSearchBook]} />
         <Footer />
       </div>
     )

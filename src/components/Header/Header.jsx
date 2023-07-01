@@ -1,5 +1,5 @@
-import { Avatar, Badge, Button, Col, Row, notification } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Badge, Button, Col, Form, Row, notification } from 'antd'
+import { CloseCircleOutlined, UserOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
 import './Header.scss'
 import Logo from '../../assets/logo/logo-book-store.png'
@@ -16,8 +16,14 @@ import CartPopover from './CartPopover'
 import UserManagement from './UserManagement'
 import { doResetCart } from '../../redux/cart/cartsSlice'
 const { Search } = Input
+const prefixSelector = (
+  <Form.Item noStyle>
+    <div>+1</div>
+  </Form.Item>
+)
 
-const Header = () => {
+const Header = (props) => {
+  const { searchBook, setSearchBook } = props
   const { user, isAuthenticated } = useSelector((state) => state.account)
   const { products } = useSelector((state) => state.carts)
   const [totalOrders, setTotalOrders] = useState(0)
@@ -105,6 +111,10 @@ const Header = () => {
     })
   }
 
+  const handleSearch = (event) => {
+    setSearchBook(event.target.value)
+  }
+
   return (
     <Row className="home-header">
       <Col
@@ -133,7 +143,17 @@ const Header = () => {
           sm={10}
           xs={10}
         >
-          <Search placeholder="input search text" enterButton size="medium" />
+          <Input.Search
+            placeholder="input search text"
+            enterButton
+            size="medium"
+            value={searchBook}
+            onChange={handleSearch}
+            suffix=<CloseCircleOutlined
+              style={{ cursor: 'pointer' }}
+              onClick={() => setSearchBook('')}
+            />
+          />
         </Col>
 
         <CartPopover>
