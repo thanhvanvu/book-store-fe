@@ -11,7 +11,6 @@ import {
   Result,
   Row,
   Steps,
-  message,
 } from 'antd'
 
 import './Cart.scss'
