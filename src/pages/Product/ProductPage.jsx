@@ -157,7 +157,7 @@ const ProductPage = () => {
             >
               <div className="product-image-gallery">
                 <ImageGallery
-                  className="gallery"
+                  className="gallery-react"
                   ref={refGallery}
                   items={imagesGallery}
                   showNav={false}

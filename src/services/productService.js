@@ -14,11 +14,35 @@ const handleSortProductWithPaginate = (pagination, query) => {
   return axios(options)
 }
 
-const handleGetProductWithFilter = (pagination, category, sort, searchBook) => {
+const handleGetProductWithFilter = (
+  pagination,
+  category,
+  sort,
+  searchBook,
+  priceFilter
+) => {
+  let searchBookQuery
+  if (searchBook === '' || searchBook === undefined) {
+    searchBookQuery = `mainText=`
+  } else {
+    searchBookQuery = `mainText=/${searchBook}/i`
+  }
+
+  let priceBookQuery
+  if (priceFilter === '' || priceFilter === undefined || priceFilter === null) {
+    priceBookQuery = ''
+  } else if (priceFilter === 'infinity') {
+    priceBookQuery = `&price>=30&price<=30`
+  } else {
+    let priceFrom = priceFilter
+    let priceTo = priceFilter + 10
+    priceBookQuery = `&price>=${priceFrom}&price<=${priceTo}`
+  }
+
   const token = localStorage.getItem('access_token')
   const options = {
     method: 'get',
-    url: `/api/v1/book?current=${pagination.current}&pageSize=${pagination.pageSize}&category=${category}&sort=${sort}&mainText=/${searchBook}/i`,
+    url: `/api/v1/book?current=${pagination.current}&pageSize=${pagination.pageSize}&category=${category}&sort=${sort}&${searchBookQuery}${priceBookQuery}`,
     headers: {
       Authorization: `Bearer ${token}`,
     },

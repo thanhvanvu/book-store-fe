@@ -41,7 +41,7 @@ const ProductTable = () => {
     {
       title: 'Id',
       dataIndex: '_id',
-      align: 'center',
+
       render: (text, record) => {
         return (
           <a
@@ -57,7 +57,7 @@ const ProductTable = () => {
     {
       title: 'Product Name',
       dataIndex: 'mainText',
-      align: 'center',
+
       sorter: true,
     },
     {

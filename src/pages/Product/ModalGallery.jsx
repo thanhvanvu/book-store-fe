@@ -37,11 +37,9 @@ const ModalGallery = (props) => {
     setActiveImage(currentImage)
   }, [isOpenGalleryModal, currentImage])
 
-  console.log(windowWidth)
   return (
     <Modal
       width={modalWidth}
-      // width="70vw"
       title="IMAGES"
       open={isOpenGalleryModal}
       // onOk={isOpenGalleryModal}

@@ -31,28 +31,26 @@ import FilterDrawer from './FilterDrawer'
 import { useOutletContext } from 'react-router-dom'
 
 const priceRange = [
-  { label: 'Up to $20', value: '20' },
-  { label: '$21 to $40', value: '40' },
-  { label: '$41 to $60', value: '60' },
-  { label: '$61 to $80', value: '80' },
-  { label: '$81 to $100', value: '100' },
-  { label: '$100 and above', value: 'infinity' },
+  { label: 'Up to $10', value: 0 },
+  { label: '$11 to $20', value: 10 },
+  { label: '$21 to $30', value: 20 },
+  { label: '$30 and above', value: 'infinity' },
 ]
 
 const Home = () => {
-  const [searchBook, setSearchBook] = useOutletContext()
+  const [searchBook, setSearchBook] = useOutletContext('')
   const [productData, setProductData] = useState([])
   const [isOpenFilter, setIsOpenFilter] = useState(false)
   const [isLoadingHomepage, setIsLoadingHomepage] = useState(false)
-  const [categorySelect, setCategorySelect] = useState()
-  const [priceFilter, setPriceFilter] = useState()
+  const [categorySelect, setCategorySelect] = useState('')
+  const [priceFilter, setPriceFilter] = useState('')
   const [categoryFilter, setCategoryFilter] = useState([])
   const [form] = Form.useForm()
   const [sort, setSort] = useState('-createdAt')
   const [pagination, setPagination] = useState({
     pageSize: 9,
     current: 1,
-    total: 100,
+    total: 0,
   })
 
   // fetch category
@@ -84,27 +82,41 @@ const Home = () => {
       pagination,
       categoryFilter,
       sort,
-      searchBook
+      searchBook,
+      priceFilter
     )
     if (response?.data) {
       setIsLoadingHomepage(false)
       const meta = response.data.meta
+      const productArr = response.data.result
+
+      const updatedProductArr = productArr.filter(
+        (product) =>
+          product._id !== '646cb40546cd461657134962' &&
+          product._id !== '646cb40546cd461657134964' &&
+          product._id !== '646cb40546cd461657134967' &&
+          product._id !== '646cb40546cd461657134968' &&
+          product._id !== '646cb40546cd461657134969' &&
+          product._id !== '646cb40546cd46165713496a' &&
+          product._id !== '646cb40546cd46165713496b'
+      )
 
       setPagination({
         current: meta.current,
         pageSize: meta.pageSize,
         total: meta.total,
       })
-      setProductData(response.data.result)
+
+      setProductData(updatedProductArr)
     }
   }
 
   useEffect(() => {
     getProduct()
-  }, [pagination.current, pagination.current, sort, searchBook])
+  }, [pagination.current, pagination.current, sort, searchBook, priceFilter])
 
   const categoryFilterAction = async () => {
-    if (categoryFilter && categoryFilter.length === 0) {
+    if (categoryFilter || categoryFilter.length === 0) {
       await getProduct()
     } else {
       const categoryQuery = categoryFilter.join(',')
@@ -142,7 +154,6 @@ const Home = () => {
   }
 
   const handleCategoryFilter = (category) => {
-    console.log(category)
     setCategoryFilter(category)
   }
   //#endregion
@@ -178,7 +189,7 @@ const Home = () => {
                 initialValues={{ remember: true }}
                 autoComplete="off"
               >
-                <div className="alphabet-header">
+                <div className="category-header">
                   <span style={{ fontWeight: 'bold' }}>Category</span>
                   <ReloadOutlined
                     title="Reset"
@@ -203,7 +214,11 @@ const Home = () => {
                         categorySelect.length > 0 &&
                         categorySelect.map((item, index) => {
                           return (
-                            <Col span={24} key={index}>
+                            <Col
+                              span={24}
+                              key={index}
+                              style={{ marginBottom: 5 }}
+                            >
                               <Checkbox value={item.value}>
                                 {item.label}
                               </Checkbox>
@@ -232,7 +247,7 @@ const Home = () => {
                     priceRange.length > 0 &&
                     priceRange.map((price, index) => {
                       return (
-                        <Col span={24} key={index}>
+                        <Col span={24} key={index} style={{ marginBottom: 5 }}>
                           <Checkbox
                             value={price.value}
                             onChange={(e) => setPriceFilter(e.target.value)}
@@ -353,10 +368,6 @@ const Home = () => {
                               {productData &&
                                 productData.length > 0 &&
                                 productData.map((product, index) => {
-                                  const thumbnail = `${
-                                    import.meta.env.VITE_BACKEND_URL
-                                  }/images/book/${product.thumbnail}`
-
                                   return (
                                     <ProductItem
                                       key={index}
