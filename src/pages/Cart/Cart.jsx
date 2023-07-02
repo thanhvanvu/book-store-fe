@@ -225,6 +225,7 @@ const Cart = () => {
 
                                   <div className="quantity">
                                     <InputNumber
+                                      style={{ marginTop: 0 }}
                                       className="product-quantity"
                                       size="small"
                                       value={product.quantity}
@@ -245,7 +246,7 @@ const Cart = () => {
                                         (item, indexUpdateButton) => {
                                           if (item.index === index) {
                                             return (
-                                              <span
+                                              <button
                                                 className="update-quantity"
                                                 onClick={() =>
                                                   handleUpdateQuantity(index)
@@ -253,7 +254,7 @@ const Cart = () => {
                                                 key={indexUpdateButton}
                                               >
                                                 Update
-                                              </span>
+                                              </button>
                                             )
                                           }
                                         }
