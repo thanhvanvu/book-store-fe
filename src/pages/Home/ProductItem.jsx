@@ -32,7 +32,7 @@ const ProductItem = (props) => {
       </div>
       <div className="product-information">
         <div className="title">{product.mainText}</div>
-        <div>${product.price}</div>
+        <div className="price">${product.price}</div>
         <div>
           FREE delivery{' '}
           <span style={{ fontWeight: 'bold' }}>{dateDelivery}</span>

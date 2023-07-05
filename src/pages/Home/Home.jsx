@@ -1,15 +1,4 @@
-import {
-  Col,
-  Row,
-  Form,
-  Checkbox,
-  Divider,
-  Rate,
-  Tabs,
-  Pagination,
-  Button,
-  Drawer,
-} from 'antd'
+import { Col, Row, Form, Checkbox, Divider, Rate, Tabs, Pagination } from 'antd'
 import {
   DownOutlined,
   FilterOutlined,
@@ -78,8 +67,15 @@ const Home = () => {
   // function to get product from backend
   const getProduct = async () => {
     setIsLoadingHomepage(true)
+
+    // bug
+    let paginationFilter = pagination
+    if (categoryFilter.length >= 1) {
+      if (parseInt(paginationFilter.total) <= 9) paginationFilter.current = '1'
+    }
+
     const response = await handleGetProductWithFilter(
-      pagination,
+      paginationFilter,
       categoryFilter,
       sort,
       searchBook,
@@ -126,6 +122,8 @@ const Home = () => {
         categoryQuery,
         sort
       )
+
+      console.log(response)
       if (response?.data?.result) {
         setProductData(response.data.result)
       }
