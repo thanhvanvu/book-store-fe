@@ -15,12 +15,6 @@ import { doLogoutAction } from '../../redux/account/accountSlice'
 import CartPopover from './CartPopover'
 import UserManagement from './UserManagement'
 import { doResetCart } from '../../redux/cart/cartsSlice'
-const { Search } = Input
-const prefixSelector = (
-  <Form.Item noStyle>
-    <div>+1</div>
-  </Form.Item>
-)
 
 const Header = (props) => {
   const { searchBook, setSearchBook } = props
@@ -149,10 +143,12 @@ const Header = (props) => {
             size="medium"
             value={searchBook}
             onChange={handleSearch}
-            suffix=<CloseCircleOutlined
-              style={{ cursor: 'pointer' }}
-              onClick={() => setSearchBook('')}
-            />
+            suffix={
+              <CloseCircleOutlined
+                style={{ cursor: 'pointer' }}
+                onClick={() => setSearchBook('')}
+              />
+            }
           />
         </Col>
 
