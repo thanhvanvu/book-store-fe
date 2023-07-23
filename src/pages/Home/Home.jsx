@@ -86,16 +86,40 @@ const Home = () => {
       const meta = response.data.meta
       const productArr = response.data.result
 
-      const updatedProductArr = productArr.filter(
-        (product) =>
-          product._id !== '646cb40546cd461657134962' &&
-          product._id !== '646cb40546cd461657134964' &&
-          product._id !== '646cb40546cd461657134967' &&
-          product._id !== '646cb40546cd461657134968' &&
-          product._id !== '646cb40546cd461657134969' &&
-          product._id !== '646cb40546cd46165713496a' &&
-          product._id !== '646cb40546cd46165713496b'
-      )
+      productArr.map((product) => {
+        if (product._id === '646cb40546cd461657134962') {
+          product.price = 12.5
+        } else if (product._id === '646cb40546cd461657134964') {
+          product.price = 10.21
+        } else if (product._id === '646cb40546cd461657134967') {
+          product.price = 8.2
+        } else if (product._id === '646cb40546cd461657134968') {
+          product.price = 3.45
+        } else if (product._id === '646cb40546cd461657134969') {
+          product.price = 4.12
+        } else if (product._id === '646cb40546cd46165713496a') {
+          product.price = 12.12
+        } else if (product._id === '646cb40546cd46165713496b') {
+          product.price = 1.25
+        }
+      })
+
+      // const updatedProductArr = productArr.filter(
+      //   (product) =>
+      //     product._id !== '646cb40546cd461657134962' &&
+      //     product._id !== '646cb40546cd461657134964' &&
+      //     product._id !== '646cb40546cd461657134967' &&
+      //     product._id !== '646cb40546cd461657134968' &&
+      //     product._id !== '646cb40546cd461657134969' &&
+      //     product._id !== '646cb40546cd46165713496a' &&
+      //     product._id !== '646cb40546cd46165713496b'
+      // )
+
+      if (sort === 'price') {
+        productArr.sort((product1, product2) => product1.price - product2.price)
+      } else if (sort === '-price') {
+        productArr.sort((product1, product2) => product2.price - product1.price)
+      }
 
       setPagination({
         current: meta.current,
@@ -103,7 +127,7 @@ const Home = () => {
         total: meta.total,
       })
 
-      setProductData(updatedProductArr)
+      setProductData(productArr)
     }
   }
 
@@ -122,8 +146,6 @@ const Home = () => {
         categoryQuery,
         sort
       )
-
-      console.log(response)
       if (response?.data?.result) {
         setProductData(response.data.result)
       }
