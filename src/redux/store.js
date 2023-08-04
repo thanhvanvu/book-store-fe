@@ -7,6 +7,7 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
+  createTransform,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

@@ -1,5 +1,7 @@
 import axios from 'axios'
-
+import { Mutex, Semaphore, withTimeout } from 'async-mutex'
+import { useSelector } from 'react-redux'
+const mutex = new Mutex()
 // soruce: https://vitejs.dev/guide/env-and-mode.html
 const backendURL = import.meta.env.VITE_BACKEND_URL
 
@@ -14,12 +16,15 @@ instance.defaults.headers.common = { Authorization: `Bearer ${access_token}` }
 
 // update token
 const handleRefreshToken = async () => {
-  const response = await instance.get('/api/v1/auth/refresh')
-  if (response?.data) {
-    return response.data.access_token
-  } else {
-    return null
-  }
+  // mutex will make sure the refresh api will be called 1 at a time
+  return await mutex.runExclusive(async () => {
+    const response = await instance.get('/api/v1/auth/refresh')
+    if (response?.data) {
+      return response.data.access_token
+    } else {
+      return null
+    }
+  })
 }
 
 // Add a request interceptor
@@ -70,7 +75,12 @@ instance.interceptors.response.use(
       +error.response.status === 400 &&
       error.config.url === '/api/v1/auth/refresh'
     ) {
-      // window.location.href = '/login'
+      const { isAuthenciated } = useSelector((state) => state.account)
+      if (isAuthenciated === false) {
+        // do nothing
+      } else {
+        window.location.href = '/login'
+      }
     }
 
     return error?.response?.data ?? Promise.reject(error)
