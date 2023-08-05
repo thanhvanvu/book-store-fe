@@ -18,6 +18,9 @@ import ProductItem from './ProductItem'
 import ProductItemVertical from './ProductItemVertical'
 import FilterDrawer from './FilterDrawer'
 import { useOutletContext } from 'react-router-dom'
+import Announcement from '../../components/Annoucement/Announcement'
+import { useDispatch, useSelector } from 'react-redux'
+import { doCloseAnnoucement } from '../../redux/announcement/announcementSlice'
 
 const priceRange = [
   { label: 'Up to $10', value: 0 },
@@ -27,6 +30,7 @@ const priceRange = [
 ]
 
 const Home = () => {
+  const dispatch = useDispatch()
   const [searchBook, setSearchBook] = useOutletContext('')
   const [productData, setProductData] = useState([])
   const [isOpenFilter, setIsOpenFilter] = useState(false)
@@ -41,6 +45,18 @@ const Home = () => {
     current: 1,
     total: 0,
   })
+  const { isAnnouncement } = useSelector((state) => state.announcement)
+  const [isOpenAnnouncement, setIsOpenAnnouncement] = useState(false)
+
+  console.log(isAnnouncement)
+
+  const openAnnouncement = () => {
+    if (isAnnouncement === true) {
+      setIsOpenAnnouncement(true)
+    } else if (isAnnouncement === false) {
+      setIsOpenAnnouncement(false)
+    }
+  }
 
   // fetch category
   useEffect(() => {
@@ -62,6 +78,8 @@ const Home = () => {
     }
 
     fetchCategory()
+
+    openAnnouncement()
   }, [])
 
   // function to get product from backend
@@ -83,6 +101,12 @@ const Home = () => {
     )
     if (response?.data) {
       setIsLoadingHomepage(false)
+
+      //#region  close Announcement modal when products are loaded
+      setIsOpenAnnouncement(false)
+      dispatch(doCloseAnnoucement())
+      //#endregion
+
       const meta = response.data.meta
       const productArr = response.data.result
 
@@ -181,6 +205,10 @@ const Home = () => {
   return (
     <>
       <div className="homepage-background">
+        <Announcement
+          isOpenAnnouncement={isOpenAnnouncement}
+          setIsOpenAnnouncement={setIsOpenAnnouncement}
+        />
         <Row style={{ height: '100%' }}>
           <Col
             className="homepage-container"

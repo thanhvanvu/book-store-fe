@@ -15,7 +15,7 @@ import HashLoading from './components/Loading/HashLoading'
 import NotFound from './components/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import AdminLayout from './components/Admin/AdminLayout'
-
+import Announcement from './components/Annoucement/Announcement'
 import UserTable from './components/Admin/User/UserTable'
 import ProductTable from './components/Admin/Product/ProductTable'
 import ProductPage from './pages/Product/ProductPage'
@@ -28,7 +28,7 @@ export default function App() {
   const dispatch = useDispatch()
 
   // state redux, account reduder, isAuthenticated: value in reducer
-  const { isAuthenticated, isLoading } = useSelector((state) => state.account)
+
   //#region  when DOM render, automatically send API to get user information
   const getAccount = async () => {
     // if user is on page login/register, no need to fetch account
@@ -152,6 +152,9 @@ export default function App() {
     //     <HashLoading />
     //   )}
     // </>
-    <RouterProvider router={router} />
+
+    <>
+      <RouterProvider router={router} />
+    </>
   )
 }
