@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Divider, Form, Input, notification } from 'antd'
+import { Button, Col, Divider, Form, Input, Row, notification } from 'antd'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import './Login.scss'
 import { handleLogin } from '../../services/userService'
@@ -44,8 +44,16 @@ const Login = () => {
   }
   return (
     <>
-      <div className="login-wrapper">
-        <div className="login-page">
+      <Row className="login-wrapper">
+        <Col
+          xxl={7}
+          xl={10}
+          lg={12}
+          md={15}
+          sm={18}
+          xs={22}
+          className="login-page"
+        >
           <Form
             name="login"
             labelCol={{ span: 20 }}
@@ -103,8 +111,8 @@ const Login = () => {
               <Link to="/register">Register here</Link>
             </div>
           </Form>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </>
   )
 }

@@ -103,8 +103,8 @@ const Home = () => {
       setIsLoadingHomepage(false)
 
       //#region  close Announcement modal when products are loaded
-      setIsOpenAnnouncement(false)
-      dispatch(doCloseAnnoucement())
+      // setIsOpenAnnouncement(false)
+      // dispatch(doCloseAnnoucement())
       //#endregion
 
       const meta = response.data.meta

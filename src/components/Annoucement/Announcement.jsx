@@ -24,10 +24,6 @@ const Announcement = (props) => {
         My app is being woken up in 30 seconds because the server might be
         hibernated. Thank you for waiting patiently!
       </p>
-      <br />
-      <p>
-        The modal will be closed automatically after the server is woken up!
-      </p>
     </Modal>
   )
 }

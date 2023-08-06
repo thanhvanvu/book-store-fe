@@ -1,10 +1,13 @@
 .register-wrapper {
-  height: 100vh;
+  height: 100%;
   background-color: rgb(213, 225, 227);
-  padding-top: 50px;
+  // padding-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the content vertically */
 
   .register-page {
-    padding-top: 20px;
+    padding: 30px;
     width: 500px;
     background-color: white;
     border: 1px solid #ccc;
@@ -15,6 +18,7 @@
     .register-title {
       font-size: 40px;
       font-weight: bold;
+      text-align: center;
     }
 
     Form {

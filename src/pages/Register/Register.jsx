@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Divider, Form, Input, notification } from 'antd'
+import { Button, Col, Divider, Form, Input, Row, notification } from 'antd'
 import './Register.scss'
 import { handleRegister } from '../../services/userService'
 import { useNavigate } from 'react-router-dom'
@@ -30,8 +30,16 @@ const Register = () => {
 
   return (
     <>
-      <div className="register-wrapper">
-        <div className="register-page">
+      <Row className="register-wrapper">
+        <Col
+          xxl={7}
+          xl={10}
+          lg={12}
+          md={15}
+          sm={18}
+          xs={22}
+          className="register-page"
+        >
           <Form
             name="register"
             labelCol={{ span: 7 }}
@@ -132,8 +140,8 @@ const Register = () => {
               </Button>
             </Form.Item>
           </Form>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </>
   )
 }
