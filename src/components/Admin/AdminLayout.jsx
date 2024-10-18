@@ -25,7 +25,6 @@ import { handleLogout } from '../../services/userService'
 import { doLogoutAction } from '../../redux/account/accountSlice'
 import Footer from '../Footer/Footer'
 import { FiUsers } from 'react-icons/fi'
-import { useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const { Header, Sider, Content } = Layout

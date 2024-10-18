@@ -48,8 +48,6 @@ const Home = () => {
   const { isAnnouncement } = useSelector((state) => state.announcement)
   const [isOpenAnnouncement, setIsOpenAnnouncement] = useState(false)
 
-  console.log(isAnnouncement)
-
   const openAnnouncement = () => {
     if (isAnnouncement === true) {
       setIsOpenAnnouncement(true)

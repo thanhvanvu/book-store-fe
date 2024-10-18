@@ -18,24 +18,20 @@ const RoleBaseRoute = (props) => {
 }
 
 const ProtectedRoute = (props) => {
-  const [authenticated, setAuthenticated] = useState('')
   // state redux, account reduder, isAuthenticated: value in reducer
+
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated)
-
-  useEffect(() => {
-    setAuthenticated(isAuthenticated)
-  }, [isAuthenticated])
-
+  console.log(isAuthenticated)
   return (
     <>
-      {authenticated === true ? (
+      {isAuthenticated === true ? (
         <>
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       ) : (
         <>
           {/* if user is not logged in, redirect user to login page */}
-          {/* <Navigate to="/login" /> */}
+          {/* <Navigate to="/login" replace /> */}
         </>
       )}
     </>
